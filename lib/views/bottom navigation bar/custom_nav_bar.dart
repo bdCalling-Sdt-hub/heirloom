@@ -31,7 +31,7 @@ ProfileScreen()
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AppLogo(img: AppImages.appLogo2,height: 40.h,),
+        title: AppLogo(img: AppImages.appLogo2,height: 30.h,),
         centerTitle: true,
         actions: [
           IconButton(onPressed: (){}, icon: Badge.count(count: 2, child: Icon(Icons.notifications)))
@@ -40,7 +40,7 @@ ProfileScreen()
       body: _screens[_currentIndex], // Display the selected screen
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 20.w,),
+          padding:  EdgeInsets.symmetric(horizontal: 20.w,vertical: 20.h),
           child: ClipRRect(
             borderRadius: BorderRadius.all(
               Radius.circular(50), // Rounded corners for the nav bar

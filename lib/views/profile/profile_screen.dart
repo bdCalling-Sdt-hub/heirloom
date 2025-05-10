@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,8 +13,6 @@ import '../../utils/app_constant.dart';
 import '../../utils/app_icons.dart';
 import 'setting/setting_screen.dart';
 
-
-
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -26,101 +21,116 @@ class ProfileScreen extends StatelessWidget {
     final sizeH = MediaQuery.sizeOf(context).height;
 
     return Scaffold(
-
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          spacing: sizeH*.02,
+          spacing: sizeH * .015,
           children: [
-
-
-            SizedBox(height: sizeH * .01),
+            // SizedBox(height: sizeH * .01),
             // Profile picture
 
-              // Show profile picture or a default image
-              //String profileImage ="${ApiConstants.imageBaseUrl}/${controller.profile['profilePicture'] }"?? AppImages.model;
-               Container(
-                width: 120.r,
-                height: 120.r,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      blurRadius: 10.r,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                  border: Border.all(
-                    color: AppColors.primaryColor.withOpacity(0.5), // Outer blue border
-                    width: 2.w,
+            // Show profile picture or a default image
+            //String profileImage ="${ApiConstants.imageBaseUrl}/${controller.profile['profilePicture'] }"?? AppImages.model;
+            Container(
+              width: 100.r,
+              height: 100.r,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 10.r,
+                    offset: const Offset(0, 5),
                   ),
-                ),
-                child: CircleAvatar(
-                  radius: 50.r,
-                  backgroundColor: Colors.grey[300],
-                  backgroundImage: NetworkImage(""),  // Load image from network
+                ],
+                border: Border.all(
+                  color: AppColors.primaryColor
+                      .withOpacity(0.5), // Outer blue border
+                  width: 2.w,
                 ),
               ),
+              child: CircleAvatar(
+                radius: 50.r,
+                backgroundColor: Colors.grey[300],
+                backgroundImage: NetworkImage(""), // Load image from network
+              ),
+            ),
 
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.w),
-          child: CustomTextOne(
-            text: "Akik",
-
-            maxLine: 1,
-            textOverflow: TextOverflow.ellipsis,
-          ),
-        ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 25.w),
+              child: CustomTextOne(
+                text: "Akik",
+                maxLine: 1,
+                textOverflow: TextOverflow.ellipsis,
+              ),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 25.w),
               child: CustomTextTwo(
                 text: "Akik@gmail.com",
-
               ),
             ),
-
 
             const Divider(
               thickness: 1,
               indent: 40,
               endIndent: 40,
             ),
-            SizedBox(height: sizeH * .01),
+            // SizedBox(height: sizeH * .01),
             // Profile buttons
             _buildProfileOption(
-              icon: Image.asset(AppIcons.profile,height: 18.h),
-              label: 'Profile Information',
-              onTap: ()  {
-                 Get.to(()=>  ProfileUpdate());
+              icon: Image.asset(AppIcons.myProfile, height: 18.h),
+              label: 'My Profile',
+              onTap: () {
+                Get.to(() => ProfileUpdate());
               },
             ),
             _buildProfileOption(
-              icon: Image.asset(AppIcons.home,height: 18.h),
+              icon: Image.asset(AppIcons.journal, height: 18.h),
+              label: 'Journal',
+              onTap: () {
+Get.toNamed(AppRoutes.journalScreen);
+              },
+            ),
+            _buildProfileOption(
+              icon: Image.asset(AppIcons.legecy, height: 18.h),
+              label: 'Legacy Massage',
+              onTap: () {
+
+              },
+            ),
+            _buildProfileOption(
+              icon: Image.asset(AppIcons.familyMembers, height: 18.h),
+              label: 'Family Members',
+              onTap: () {
+
+              },
+            ),
+            _buildProfileOption(
+              icon: Image.asset(AppIcons.support, height: 18.h),
+              label: 'Support',
+              onTap: () {
+
+              },
+            ),
+            _buildProfileOption(
+              icon: Image.asset(AppIcons.setting, height: 18.h),
               label: 'Settings',
               onTap: () {
-                Get.to( ()=> const SettingScreen());
+                Get.to(() => const SettingScreen());
               },
             ),
 
-            _buildProfileOption(
-              icon: Image.asset(AppIcons.home,height: 18.h),
-              label: 'Support',
-              onTap: ()  {
-                Get.to( ()=>  SupportScreen());
-              },
-            ),
 
-SizedBox(height: sizeH*.02,),
+
+
             // Logout button
             _buildProfileOption(
               isTrue: true,
-              icon: Image.asset(AppIcons.home,height: 18.h),
+              icon: Image.asset(AppIcons.logOut, height: 18.h),
               label: 'Logout',
-              iconColor: Colors.red,
-              labelColor: Colors.red,
-              borderColor: Colors.red,
-              fillColor: AppColors.textFieldFillColor,
+
+              fillColor: AppColors.cardColor,
               onTap: () {
                 showDialog(
                   context: context,
@@ -130,7 +140,7 @@ SizedBox(height: sizeH*.02,),
                       onCancel: () {
                         Get.back();
                       },
-                      onConfirm: () async{
+                      onConfirm: () async {
                         PrefsHelper.remove(AppConstants.isLogged);
                         PrefsHelper.remove(AppConstants.bearerToken);
                         PrefsHelper.remove(AppConstants.userId);
@@ -141,9 +151,7 @@ SizedBox(height: sizeH*.02,),
                   },
                 );
               },
-
             ),
-
           ],
         ),
       ),
@@ -158,18 +166,27 @@ SizedBox(height: sizeH*.02,),
     Color iconColor = Colors.white,
     Color labelColor = Colors.white,
     Color? fillColor,
-    Color borderColor = Colors.white24,
+    Color borderColor = AppColors.cardColor,
     final bool? isTrue,
   }) {
     return Padding(
-      padding: EdgeInsets.symmetric( horizontal: 25.w),
+      padding: EdgeInsets.symmetric(horizontal: 25.w),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-              color: fillColor??AppColors.primaryColor.withOpacity(0.2),
+              color: fillColor ?? AppColors.profileCardColor,
+              border: Border.all(color: borderColor),
+              borderRadius: BorderRadius.all(Radius.circular(16)),
 
-              borderRadius: BorderRadius.all(Radius.circular(8))
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1), // Shadow color (with opacity)
+                offset: Offset(0, 4), // Horizontal and vertical offset
+                blurRadius: 6, // Blur effect
+                spreadRadius: 0, // How much the shadow spreads
+              ),
+            ],
           ),
           padding: EdgeInsets.symmetric(vertical: 10.h),
           child: Row(
@@ -181,7 +198,11 @@ SizedBox(height: sizeH*.02,),
               const Spacer(),
               isTrue == true
                   ? const Icon(null)
-                  : Icon(Icons.arrow_right,  size: 20.h),
+                  : Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      size: 20.h,
+                      color: Colors.white,
+                    ),
               SizedBox(width: 10.w),
             ],
           ),
@@ -189,7 +210,4 @@ SizedBox(height: sizeH*.02,),
       ),
     );
   }
-
-
-
 }

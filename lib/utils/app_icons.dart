@@ -19,7 +19,11 @@ class AppIcons {
 
 
 
-
+  static const String myProfile = "$path/myProfile.png";
+  static const String support = "$path/support.png";
+  static const String logOut = "$path/logOut.png";
+  static const String setting = "$path/setting.png";
+  static const String familyMembers = "$path/familyMembers.png";
 
 
 

@@ -4,7 +4,7 @@ class AppImages {
   static const String appLogo2 = "$baseUrl/appLogo2.png";
   static const String appBg = "$baseUrl/bg3.svg";
   static const String passChange = "$baseUrl/pass_change.svg";
-  static const String homeScreenImage = "$baseUrl/homeScreenImage.png";
+  static const String homeScreenImage = "$baseUrl/homeImage.png";
 
 
 

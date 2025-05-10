@@ -24,5 +24,7 @@ class AppColors{
   
   static const Color navBarColor = Color(0xff565B5C);
   static const Color cardColor = Color(0xff727676);
+  static const Color profileCardColor = Color(0xff282E2E);
+
 
 }

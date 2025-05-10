@@ -26,33 +26,13 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
 
   final TextEditingController genderTEController = TextEditingController();
 
-  final TextEditingController birthdayTEController = TextEditingController();
+  final TextEditingController ageTEController = TextEditingController();
 
-  final TextEditingController heightTEController = TextEditingController();
-
-  final TextEditingController weightTEController = TextEditingController();
-
-  final RxString weightUnit = 'kg'.obs;
-  final RxString heightUnit = 'cm'.obs;
+  final TextEditingController addressTEController = TextEditingController();
 
   final ImagePicker _picker = ImagePicker();
 
   File? _profileImage;
-
-  //select date
-  Future<void> selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-
-    if (pickedDate != null) {
-      birthdayTEController.text =
-      "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-    }
-  }
 
   Future<void> _pickImage() async {
     showModalBottomSheet(
@@ -64,10 +44,12 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
               leading: const Icon(Icons.photo_library),
               title: const Text("Pick from Gallery"),
               onTap: () async {
-                final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                final XFile? image =
+                    await _picker.pickImage(source: ImageSource.gallery);
                 if (image != null) {
                   setState(() {
-                    _profileImage = File(image.path);  // Store the selected image in _profileImage
+                    _profileImage = File(image
+                        .path); // Store the selected image in _profileImage
                   });
                 }
                 Navigator.pop(context);
@@ -77,10 +59,12 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
               leading: const Icon(Icons.camera_alt),
               title: const Text("Take a Photo"),
               onTap: () async {
-                final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+                final XFile? image =
+                    await _picker.pickImage(source: ImageSource.camera);
                 if (image != null) {
                   setState(() {
-                    _profileImage = File(image.path);  // Store the selected image in _profileImage
+                    _profileImage = File(image
+                        .path); // Store the selected image in _profileImage
                   });
                 }
                 Navigator.pop(context);
@@ -91,8 +75,6 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
       },
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -115,57 +97,62 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-
-                      // Show profile picture or a default image
+                    // Show profile picture or a default image
                     //  String profileImage = "${ApiConstants.imageBaseUrl}/${controller.profile['profilePicture']}" ?? AppImages.model;
 
                     CircleAvatar(
                       radius: 60.r,
-                      backgroundColor: AppColors.primaryColor.withOpacity(0.2),
+                      backgroundColor:
+                          AppColors.secondaryColor.withOpacity(0.2),
                       backgroundImage: _profileImage != null
-                          ? FileImage(_profileImage!)  // If image is picked, display it
-                          : AssetImage('assets/default_profile_image.png') as ImageProvider,  // Default image
-                      onBackgroundImageError: (error, stackTrace) {
-                      },
+                          ? FileImage(
+                              _profileImage!) // If image is picked, display it
+                          : AssetImage('assets/default_profile_image.png')
+                              as ImageProvider, // Default image
+                      onBackgroundImageError: (error, stackTrace) {},
                     ),
-
 
                     Container(
                       height: 40.h,
                       width: 40.w,
                       decoration: const BoxDecoration(
-                        color: AppColors.primaryColor,
+                        color: AppColors.cardColor,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: IconButton(
-                          onPressed:(){_pickImage();},
-                          icon: const Icon(Icons.camera_alt, color: Colors.white),
+                          onPressed: () {
+                            _pickImage();
+                          },
+                          icon:
+                              const Icon(Icons.camera_alt, color: Colors.white),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-               CustomTextOne(text: "Your Name",fontSize: sizeH*.018,),
+              SizedBox(
+                height: 20.h,
+              ),
               CustomTextField(
                 controller: nameController,
-                hintText: "Enter your name",
+                hintText: "Enter your Full Name",
               ),
-              CustomTextOne(text: "Gender", fontSize: sizeH * .018,),
               CustomTextField(
                 readOnly: true,
                 controller: genderTEController,
-                hintText: "Select Gender",
+                hintText: "Pronounce",
                 suffixIcon: PopupMenuButton<String>(
                   icon: const Icon(
-                    Icons.arrow_drop_down_circle_outlined,
-                    color: AppColors.primaryColor,
+                    Icons.keyboard_arrow_down,
+                    color: Colors.white,
                   ),
                   onSelected: (String selectedGender) {
                     genderTEController.text = selectedGender;
                   },
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(
                       value: "Male",
                       child: Text("Male"),
@@ -188,121 +175,29 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                 },
                 borderRadio: 12.r,
               ),
-              // Birthday
-              CustomTextOne(text: "Date of birth", fontSize: sizeH * .018,),
+
               CustomTextField(
-                onTap: () {
-                  selectDate(context);
-                },
-                readOnly: true,
-                controller: birthdayTEController,
-                hintText: "MM-DD-YYYY",
-                suffixIcon: const Icon(Icons.calendar_month, color: AppColors.primaryColor),
+                controller: ageTEController,
+                hintText: "Enter Your Age",
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Birth Date cannot be empty";
+                    return "Age cannot be empty";
                   }
                   return null;
                 },
-                borderRadio: 12.r,
-              ),
-              // Height
-              CustomTextOne(text: "Height", fontSize: sizeH * .018,),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      controller: heightTEController,
-                      hintText: "Enter Height",
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Height cannot be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.w),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 2.h),
-                      decoration: BoxDecoration(
-                        color: AppColors.textFieldFillColor,
-                        border: Border.all(color: AppColors.primaryColor),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Obx(() => DropdownButton<String>(
-                        value: heightUnit.value,
-                        icon: const Icon(
-                          Icons.arrow_drop_down_circle_outlined,
-                          color: AppColors.primaryColor,
-                        ),
-                        elevation: 16,
-                        style: TextStyle(color: AppColors.primaryColor),
-                        onChanged: (String? newValue) {
-                          heightUnit.value = newValue!;
-                        },
-                        items: <String>['cm', 'Inch']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      )),
-                    ),
-                  ),
-                ],
               ),
               // Weight
-              CustomTextOne(text: "Weight", fontSize: sizeH * .018,),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      controller: weightTEController,
-                      hintText: "Enter Weight",
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Weight cannot be empty";
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.w),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 2.h),
-                      decoration: BoxDecoration(
-                        color: AppColors.textFieldFillColor,
-                        border: Border.all(color: AppColors.primaryColor),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Obx(() => DropdownButton<String>(
-                        value: weightUnit.value,
-                        icon: const Icon(
-                          Icons.arrow_drop_down_circle_outlined,
-                          color: AppColors.primaryColor,
-                        ),
-                        elevation: 16,
-                        style: TextStyle(color: AppColors.primaryColor),
-                        onChanged: (String? newValue) {
-                          weightUnit.value = newValue!;
-                        },
-                        items: <String>['kg', 'lbs']
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      )),
-                    ),
-                  ),
-                ],
+              CustomTextField(
+                controller: addressTEController,
+                hintText: "Enter Your Address",
+                keyboardType: TextInputType.text,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Address cannot be empty";
+                  }
+                  return null;
+                },
               ),
               SizedBox(
                 height: sizeH * .02,

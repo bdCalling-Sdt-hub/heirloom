@@ -25,7 +25,9 @@ class HomeScreen extends StatelessWidget {
               Stack(
                 alignment: Alignment.topCenter,
                 children: [
-                  Image.asset(AppImages.homeScreenImage, height: sizeH * .35, width: double.infinity, fit: BoxFit.cover),
+                  ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      child: Image.asset(AppImages.homeScreenImage, height: sizeH * .35, width: double.infinity, fit: BoxFit.cover)),
                   Column(
                     children: [
                       CustomTextOne(

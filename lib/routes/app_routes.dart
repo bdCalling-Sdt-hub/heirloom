@@ -3,6 +3,7 @@ import '../views/auth/password_changed_ui.dart';
 import '../views/auth/select_age_screen.dart';
 import '../views/home/notification/notification.dart';
 
+import '../views/profile/journal/journal_screen.dart';
 import '../views/splash screen/onBoardingScreen.dart';
 import 'exports.dart';
 
@@ -19,6 +20,7 @@ class AppRoutes {
   static const String onboardingScreen = "/OnboardingScreen";
   static const String selectAgeScreen = "/SelectAgeScreen";
   static const String othersInfoScreen = "/OthersInfoScreen";
+  static const String journalScreen = "/JournalScreen";
 
 
 
@@ -41,5 +43,6 @@ class AppRoutes {
         GetPage(name: notificationScreen, page: () =>  NotificationScreen()),
         GetPage(name: selectAgeScreen, page: () =>  SelectAgeScreen()),
         GetPage(name: othersInfoScreen, page: () =>  OthersInfoScreen()),
+        GetPage(name: journalScreen, page: () =>  JournalScreen()),
       ];
 }
