@@ -110,7 +110,7 @@ class CustomTextTwo extends StatelessWidget {
             fontWeight:fontWeight??FontWeight.w400 ,
             color: color ?? AppColors.textColor,
           decoration: textDecoration ?? TextDecoration.none,
-            decorationColor: AppColors.primaryColor
+            decorationColor: AppColors.textColor,
         ),
       ),
     );
