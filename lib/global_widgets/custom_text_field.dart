@@ -20,6 +20,7 @@ class CustomTextField extends StatefulWidget {
   final double? contentPaddingHorizontal;
   final double? contentPaddingVertical;
   final int? maxLine;
+  final int? maxLength;
   final double? hinTextSize;
   final Widget? suffixIcon;
   final List<String>? autofillHints;
@@ -55,7 +56,7 @@ class CustomTextField extends StatefulWidget {
     this.readOnly = false,
     this.borderRadio,
     this.onTap,
-    this.onChanged, this.validationHeight, this.autofillHints,
+    this.onChanged, this.validationHeight, this.autofillHints, this.maxLength,
   });
 
   @override
@@ -90,6 +91,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       keyboardType: widget.keyboardType,
       obscuringCharacter: widget.obscure ?? '*',
       maxLines: widget.maxLine ?? 1,
+      maxLength:widget.maxLength ,
       validator: widget.validator ??
               (value) {
             if (value == null || value.isEmpty) {

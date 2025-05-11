@@ -96,7 +96,7 @@ Get.toNamed(AppRoutes.journalScreen);
               icon: Image.asset(AppIcons.legecy, height: 18.h),
               label: 'Legacy Massage',
               onTap: () {
-
+                Get.toNamed(AppRoutes.legacyScreen);
               },
             ),
             _buildProfileOption(

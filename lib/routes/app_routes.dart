@@ -4,6 +4,9 @@ import '../views/auth/select_age_screen.dart';
 import '../views/home/notification/notification.dart';
 
 import '../views/profile/journal/journal_screen.dart';
+import '../views/profile/legacy/add_legacy_message_screen.dart';
+import '../views/profile/legacy/legacy_message_view_screen.dart';
+import '../views/profile/legacy/legacy_screen.dart';
 import '../views/splash screen/onBoardingScreen.dart';
 import 'exports.dart';
 
@@ -21,6 +24,9 @@ class AppRoutes {
   static const String selectAgeScreen = "/SelectAgeScreen";
   static const String othersInfoScreen = "/OthersInfoScreen";
   static const String journalScreen = "/JournalScreen";
+  static const String legacyScreen = "/LegacyScreen";
+  static const String addLegacyMessageScreen = "/AddLegacyMessageScreen";
+  static const String legacyMessageViewScreen = "/LegacyMessageViewScreen";
 
 
 
@@ -44,5 +50,8 @@ class AppRoutes {
         GetPage(name: selectAgeScreen, page: () =>  SelectAgeScreen()),
         GetPage(name: othersInfoScreen, page: () =>  OthersInfoScreen()),
         GetPage(name: journalScreen, page: () =>  JournalScreen()),
+        GetPage(name: legacyScreen, page: () =>  LegacyScreen()),
+        GetPage(name: addLegacyMessageScreen, page: () =>  AddLegacyMessageScreen()),
+        GetPage(name: legacyMessageViewScreen, page: () =>  LegacyMessageViewScreen()),
       ];
 }

@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 import '../../../Controller/profile/setting_controller.dart';
 import '../../../global_widgets/custom_text.dart';
 import '../../../global_widgets/dialog.dart';
@@ -13,12 +11,8 @@ import '../../../utils/app_icons.dart';
 import 'appData.dart';
 import 'change password/change_password.dart';
 
-
-
-
 class SettingScreen extends StatefulWidget {
-
-  const SettingScreen({super.key,});
+  const SettingScreen({super.key});
 
   @override
   State<SettingScreen> createState() => _SettingScreenState();
@@ -28,6 +22,7 @@ class _SettingScreenState extends State<SettingScreen> {
   String? isLogged;
   String? userId;
   final SettingController controller = Get.put(SettingController());
+
   void getData() async {
     isLogged = await PrefsHelper.getString(AppConstants.isLogged);
     userId = await PrefsHelper.getString(AppConstants.userId);
@@ -35,10 +30,10 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
+
   @override
   Widget build(BuildContext context) {
     final sizeH = MediaQuery.sizeOf(context).height;
@@ -48,68 +43,66 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.all(sizeH * .008),
-        // child: Column(
-        //   children: [
-        //     buildOption(
-        //       icon: Image.asset(AppIcons.pass,height: 18.h),
-        //       label: 'Change Password',
-        //       onTap: () {
-        //       Get.to(()=> ChangePassword());
-        //       },
-        //     ),
-        //     buildOption(
-        //       icon: Image.asset(AppIcons.privacy,height: 18.h),
-        //       label: 'Privacy Policy',
-        //       onTap: () {
-        //         Get.to(()=> AppData(type: "privacy-policy"));
-        //       },
-        //     ),
-        //     buildOption(
-        //       icon: Image.asset(AppIcons.terms,height: 18.h),
-        //       label: 'Terms & Conditions',
-        //       onTap: () {
-        //         Get.to(()=> AppData(type: "terms"));
-        //       },
-        //     ),
-        //     buildOption(
-        //       icon: Image.asset(AppIcons.about,height: 18.h),
-        //       label: 'About Us',
-        //       onTap: () {
-        //         Get.to(()=> AppData(type: "about"));
-        //       },
-        //     ),
-        //     const Spacer(),
-        //     Padding(
-        //       padding: EdgeInsets.symmetric(vertical: 30.h),
-        //       child:    buildOption(
-        //         noIcon: true,
-        //         color: Colors.red.withOpacity(.2),
-        //         icon: Image.asset(AppIcons.delete,height: 18.h),
-        //         textColor: Colors.red,
-        //         iconColor: Colors.red,
-        //         label: 'Delete Account',
-        //         onTap: () {
-        //      showDialog(
-        //             context: context,
-        //             builder: (context) => CustomDialog(
-        //
-        //               title: "Do you want to delete your account ?",
-        //               confirmButtonText: 'Delete',
-        //               confirmButtonColor: Colors.red,
-        //               onCancel: () {
-        //                 // Handle Cancel Button Action
-        //                 Get.back();
-        //               },
-        //               onConfirm: () {
-        //                controller.deleteUser(userId.toString());
-        //               },
-        //             ),
-        //           );
-        //         },
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        child: Column(
+          children: [
+            buildOption(
+              icon: Image.asset(AppIcons.changePass, height: 18.h),
+              label: 'Change Password',
+              onTap: () {
+                Get.to(() => ChangePassword());
+              },
+            ),
+            buildOption(
+              icon: Image.asset(AppIcons.privacy, height: 18.h),
+              label: 'Privacy Policy',
+              onTap: () {
+                Get.to(() => AppData(type: "privacy-policy"));
+              },
+            ),
+            buildOption(
+              icon: Image.asset(AppIcons.terms, height: 18.h),
+              label: 'Terms & Conditions',
+              onTap: () {
+                Get.to(() => AppData(type: "terms"));
+              },
+            ),
+            buildOption(
+              icon: Image.asset(AppIcons.about, height: 18.h),
+              label: 'About Us',
+              onTap: () {
+                Get.to(() => AppData(type: "about"));
+              },
+            ),
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 30.h),
+              child: buildOption(
+                noIcon: true,
+                color: Colors.red,
+                icon: Icon(Icons.delete),
+                textColor: Colors.white,
+                label: 'Delete Account',
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => CustomDialog(
+                      title: "Do you want to delete your account?",
+                      confirmButtonText: 'Delete',
+                      confirmButtonColor: Colors.red,
+                      onCancel: () {
+                        // Handle Cancel Button Action
+                        Get.back();
+                      },
+                      onConfirm: () {
+                        controller.deleteUser(userId.toString());
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -132,20 +125,23 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12.h),
           decoration: BoxDecoration(
-            color:color??AppColors.primaryColor.withOpacity(0.2),
+            color: color ?? AppColors.profileCardColor,
             borderRadius: BorderRadius.circular(8.r),
-
           ),
           child: Row(
             children: [
               SizedBox(width: 10.w),
               icon,
               SizedBox(width: 20.w),
-              CustomTextTwo(text: label,color: textColor?? Colors.black,),
+              CustomTextTwo(
+                text: label,
+                color: textColor ?? AppColors.textColor,
+              ),
               const Spacer(),
-             noIcon==true?SizedBox.shrink(): Icon(Icons.arrow_right, size: 18.h),
+              noIcon == true
+                  ? SizedBox.shrink()
+                  : Icon(Icons.arrow_right, size: 18.h),
               SizedBox(width: 10.w),
-
             ],
           ),
         ),
