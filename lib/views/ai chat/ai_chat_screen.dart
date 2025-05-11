@@ -90,6 +90,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                     );
                   } else {
                     return Align(
+
                       alignment: Alignment.centerLeft,
                       child: BubbleSpecialThree(
                         text: message['message']!,
