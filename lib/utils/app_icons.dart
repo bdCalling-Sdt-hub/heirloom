@@ -26,9 +26,13 @@ class AppIcons {
   static const String familyMembers = "$path/familyMembers.png";
 
 
+  static const String image = "$path/image.png";
+  static const String send = "$path/send.png";
 
-
-
+  static const String  changePass= "$path/changePass.png";
+  static const String  terms= "$path/terms.png";
+  static const String  privacy= "$path/privacy.png";
+  static const String  about= "$path/about.png";
 
 }
 

@@ -1,12 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:heirloom/global_widgets/app_logo.dart';
 import 'package:heirloom/utils/app_images.dart';
+import 'package:heirloom/views/ai%20chat/ai_chat_screen.dart';
 import 'package:heirloom/views/home/home_screen.dart';
 import 'package:heirloom/views/profile/profile_screen.dart';
 import '../../utils/app_colors.dart';
-import '../../utils/app_icons.dart'; // Import the AppIcons class
+import '../../utils/app_icons.dart';
 
 class CustomNavBar extends StatefulWidget {
   const CustomNavBar({super.key});
@@ -22,7 +24,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   final List<Widget> _screens = [
     // Replace with your actual screens
 HomeScreen(),
-    Center(child: CircularProgressIndicator()),
+AiChatScreen(),
     Center(child: CircularProgressIndicator()),
 ProfileScreen()
   ];
@@ -40,7 +42,7 @@ ProfileScreen()
       body: _screens[_currentIndex], // Display the selected screen
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 20.w,vertical: 20.h),
+          padding:  EdgeInsets.symmetric(horizontal: 20.w,vertical:Platform.isIOS? 0 : 20.h),
           child: ClipRRect(
             borderRadius: BorderRadius.all(
               Radius.circular(50), // Rounded corners for the nav bar

@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           theme: light(),
           debugShowCheckedModeBanner: false,
           getPages: AppRoutes.routes,
-          initialRoute: AppRoutes.customNavBar,
+          initialRoute: AppRoutes.splashScreen,
          initialBinding: ControllerBindings(),
 
 

@@ -48,68 +48,68 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.all(sizeH * .008),
-        // child: Column(
-        //   children: [
-        //     buildOption(
-        //       icon: Image.asset(AppIcons.pass,height: 18.h),
-        //       label: 'Change Password',
-        //       onTap: () {
-        //       Get.to(()=> ChangePassword());
-        //       },
-        //     ),
-        //     buildOption(
-        //       icon: Image.asset(AppIcons.privacy,height: 18.h),
-        //       label: 'Privacy Policy',
-        //       onTap: () {
-        //         Get.to(()=> AppData(type: "privacy-policy"));
-        //       },
-        //     ),
-        //     buildOption(
-        //       icon: Image.asset(AppIcons.terms,height: 18.h),
-        //       label: 'Terms & Conditions',
-        //       onTap: () {
-        //         Get.to(()=> AppData(type: "terms"));
-        //       },
-        //     ),
-        //     buildOption(
-        //       icon: Image.asset(AppIcons.about,height: 18.h),
-        //       label: 'About Us',
-        //       onTap: () {
-        //         Get.to(()=> AppData(type: "about"));
-        //       },
-        //     ),
-        //     const Spacer(),
-        //     Padding(
-        //       padding: EdgeInsets.symmetric(vertical: 30.h),
-        //       child:    buildOption(
-        //         noIcon: true,
-        //         color: Colors.red.withOpacity(.2),
-        //         icon: Image.asset(AppIcons.delete,height: 18.h),
-        //         textColor: Colors.red,
-        //         iconColor: Colors.red,
-        //         label: 'Delete Account',
-        //         onTap: () {
-        //      showDialog(
-        //             context: context,
-        //             builder: (context) => CustomDialog(
-        //
-        //               title: "Do you want to delete your account ?",
-        //               confirmButtonText: 'Delete',
-        //               confirmButtonColor: Colors.red,
-        //               onCancel: () {
-        //                 // Handle Cancel Button Action
-        //                 Get.back();
-        //               },
-        //               onConfirm: () {
-        //                controller.deleteUser(userId.toString());
-        //               },
-        //             ),
-        //           );
-        //         },
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        child: Column(
+          children: [
+            buildOption(
+              icon: Image.asset(AppIcons.changePass,height: 18.h),
+              label: 'Change Password',
+              onTap: () {
+              Get.to(()=> ChangePassword());
+              },
+            ),
+            buildOption(
+              icon: Image.asset(AppIcons.privacy,height: 18.h),
+              label: 'Privacy Policy',
+              onTap: () {
+                Get.to(()=> AppData(type: "privacy-policy"));
+              },
+            ),
+            buildOption(
+              icon: Image.asset(AppIcons.terms,height: 18.h),
+              label: 'Terms & Conditions',
+              onTap: () {
+                Get.to(()=> AppData(type: "terms"));
+              },
+            ),
+            buildOption(
+              icon: Image.asset(AppIcons.about,height: 18.h),
+              label: 'About Us',
+              onTap: () {
+                Get.to(()=> AppData(type: "about"));
+              },
+            ),
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 30.h),
+              child:    buildOption(
+                noIcon: true,
+                color: Colors.red,
+                icon: Icon(Icons.delete),
+                textColor: Colors.white,
+
+                label: 'Delete Account',
+                onTap: () {
+             showDialog(
+                    context: context,
+                    builder: (context) => CustomDialog(
+
+                      title: "Do you want to delete your account ?",
+                      confirmButtonText: 'Delete',
+                      confirmButtonColor: Colors.red,
+                      onCancel: () {
+                        // Handle Cancel Button Action
+                        Get.back();
+                      },
+                      onConfirm: () {
+                       controller.deleteUser(userId.toString());
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -132,7 +132,7 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12.h),
           decoration: BoxDecoration(
-            color:color??AppColors.primaryColor.withOpacity(0.2),
+            color:color??AppColors.profileCardColor,
             borderRadius: BorderRadius.circular(8.r),
 
           ),
@@ -141,7 +141,7 @@ class _SettingScreenState extends State<SettingScreen> {
               SizedBox(width: 10.w),
               icon,
               SizedBox(width: 20.w),
-              CustomTextTwo(text: label,color: textColor?? Colors.black,),
+              CustomTextTwo(text: label,color: textColor?? AppColors.textColor,),
               const Spacer(),
              noIcon==true?SizedBox.shrink(): Icon(Icons.arrow_right, size: 18.h),
               SizedBox(width: 10.w),
