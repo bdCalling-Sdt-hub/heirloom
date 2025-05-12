@@ -14,7 +14,7 @@ class AppColors{
   static const Color textFieldHintColor = Color(0xff8C8C8C);
 
   static const Color buttonColor = Color(0xff6A0DAD);
-  static const Color buttonSecondColor = Color(0xffFAEFD7);
+  static const Color buttonSecondColor = Color(0xff69645A);
 
   static const Color iconColor = Color(0xff9D9D9D);
   static const Color chatSecondColor = Color(0xff555555);

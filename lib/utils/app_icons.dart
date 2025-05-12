@@ -33,6 +33,8 @@ class AppIcons {
   static const String terms = "$path/terms.png";
   static const String send = "$path/send.png";
   static const String image = "$path/image.png";
+  static const String denied = "$path/denied.png";
+  static const String approve = "$path/approve.png";
 
 
 

@@ -35,7 +35,8 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
     if (picked != null && picked != _deliveryDate) {
       setState(() {
         _deliveryDate = picked;
-        _dateController.text = DateFormat('MM/dd/yyyy').format(_deliveryDate!); // Format date
+        _dateController.text =
+            DateFormat('MM/dd/yyyy').format(_deliveryDate!); // Format date
       });
     }
   }
@@ -47,7 +48,6 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
         title: CustomTextOne(
           text: 'Legacy Message',
         ),
-        
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -64,9 +64,15 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
                 color: AppColors.textColor,
               ),
 
-              CustomTextField(controller: _recipientController,hintText: 'Search or select recipient',suffixIcon: Icon(Icons.search,color: Colors.white,),),
+              CustomTextField(
+                controller: _recipientController,
+                hintText: 'Search or select recipient',
+                suffixIcon: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+              ),
 
-        
               // Delivery Trigger (Date Picker)
               CustomTextOne(
                 text: 'Delivery Trigger',
@@ -75,12 +81,19 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
                 color: AppColors.textColor,
               ),
 
-              CustomTextField(controller: _dateController,hintText: 'MM/DD/YYYY',suffixIcon:IconButton(
-                icon: Icon(Icons.calendar_month,color: Colors.white,),
-                onPressed: () => _selectDate(context),
-              ) ,),
+              CustomTextField(
+                controller: _dateController,
+                hintText: 'MM/DD/YYYY',
+                readOnly: true,
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.calendar_month,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => _selectDate(context),
+                ),
+              ),
 
-        
               // Message Field
               CustomTextOne(
                 text: 'Messages',
@@ -89,11 +102,18 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
                 color: AppColors.textColor,
               ),
 
-              CustomTextField(controller: _messageController,hintText:'Type your legacy message...' ,maxLine: 5,maxLength: 120,),
+              CustomTextField(
+                controller: _messageController,
+                hintText: 'Type your legacy message...',
+                maxLine: 5,
+                maxLength: 120,
+              ),
 
-        SizedBox(height: 20.h,),
+              SizedBox(
+                height: 20.h,
+              ),
               // Compose Legacy Button
-           CustomTextButton(text: 'Compose Legacy🎀', onTap: (){})
+              CustomTextButton(text: 'Compose Legacy', onTap: () {})
             ],
           ),
         ),

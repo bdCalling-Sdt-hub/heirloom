@@ -1,13 +1,4 @@
-import '../views/auth/others_info_screen.dart';
-import '../views/auth/password_changed_ui.dart';
-import '../views/auth/select_age_screen.dart';
-import '../views/home/notification/notification.dart';
 
-import '../views/profile/journal/journal_screen.dart';
-import '../views/profile/legacy/add_legacy_message_screen.dart';
-import '../views/profile/legacy/legacy_message_view_screen.dart';
-import '../views/profile/legacy/legacy_screen.dart';
-import '../views/splash screen/onBoardingScreen.dart';
 import 'exports.dart';
 
 class AppRoutes {
@@ -27,6 +18,8 @@ class AppRoutes {
   static const String legacyScreen = "/LegacyScreen";
   static const String addLegacyMessageScreen = "/AddLegacyMessageScreen";
   static const String legacyMessageViewScreen = "/LegacyMessageViewScreen";
+  static const String familyMembers = "/FamilyMembers";
+  static const String addFamilyMemberScreen = "/AddFamilyMemberScreen";
 
 
 
@@ -38,14 +31,12 @@ class AppRoutes {
         GetPage(name: splashScreen, page: () => const SplashScreen()),
         GetPage(name: onboardingScreen, page: () => const OnboardingScreen()),
         GetPage(name: signInScreen, page: () => SignInScreen()),
-
         GetPage(name: signUpScreen, page: () => SignUpScreen()),
         GetPage(name: emailPassScreen, page: () => EmailPassScreen()),
         GetPage(name: otpVerificationScreen, page: () => OtpVerificationScreen()),
         GetPage(name: resetPassScreen, page: () => ResetPassScreen()),
         GetPage(name: passwordChangedUi, page: () => PasswordChangedUi()),
         GetPage(name: customNavBar, page: () => const CustomNavBar()),
-
         GetPage(name: notificationScreen, page: () =>  NotificationScreen()),
         GetPage(name: selectAgeScreen, page: () =>  SelectAgeScreen()),
         GetPage(name: othersInfoScreen, page: () =>  OthersInfoScreen()),
@@ -53,5 +44,7 @@ class AppRoutes {
         GetPage(name: legacyScreen, page: () =>  LegacyScreen()),
         GetPage(name: addLegacyMessageScreen, page: () =>  AddLegacyMessageScreen()),
         GetPage(name: legacyMessageViewScreen, page: () =>  LegacyMessageViewScreen()),
+        GetPage(name: familyMembers, page: () =>  FamilyMembers()),
+        GetPage(name: addFamilyMemberScreen, page: () =>  AddFamilyMemberScreen()),
       ];
 }

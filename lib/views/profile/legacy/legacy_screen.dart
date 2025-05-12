@@ -3,11 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:heirloom/global_widgets/custom_text.dart'; // Assuming you have these custom widgets
 import 'package:heirloom/global_widgets/custom_text_button.dart';
-import 'package:heirloom/global_widgets/custom_text_field.dart';
 import 'package:heirloom/routes/app_routes.dart';
 import 'package:heirloom/utils/app_colors.dart';
 import 'package:heirloom/utils/app_icons.dart';
-import 'package:heirloom/utils/app_images.dart';
 import 'package:get/get.dart';
 
 class LegacyScreen extends StatelessWidget {
@@ -94,7 +92,7 @@ class LegacyScreen extends StatelessWidget {
                               children: [
                                 IconButton(
                                   icon: Icon(
-                                    FontAwesomeIcons.edit,
+                                    FontAwesomeIcons.penToSquare,
                                     color: Colors.white,
                                     size: 18.h,
                                   ),

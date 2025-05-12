@@ -51,16 +51,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
           text: 'Apr13, 2025 11:03 AM',
           textDecoration: TextDecoration.underline,
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              FontAwesomeIcons.arrowUpRightFromSquare,
-              color: Colors.white,
-              size: 16.h,
-            ),
-            onPressed: () {},
-          ),
-        ],
+
       ),
       body: Padding(
         padding: EdgeInsets.all(10.w),

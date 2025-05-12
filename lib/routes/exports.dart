@@ -1,12 +1,20 @@
 
 export '../views/auth/email_pass_screen.dart';
-
 export '../views/auth/otp_verification_screen.dart';
 export '../views/auth/reset_pass_screen.dart';
 export '../views/auth/sign_in_screen.dart';
 export '../views/auth/sign_up_screen.dart';
 export '../views/bottom navigation bar/custom_nav_bar.dart';
-
-
 export '../views/splash screen/splash_screen.dart';
 export 'package:get/get.dart';
+export '../views/auth/others_info_screen.dart';
+export '../views/auth/password_changed_ui.dart';
+export '../views/auth/select_age_screen.dart';
+export '../views/home/notification/notification.dart';
+export '../views/profile/family members/add_family_member_screen.dart';
+export '../views/profile/family members/family_members.dart';
+export '../views/profile/journal/journal_screen.dart';
+export '../views/profile/legacy/add_legacy_message_screen.dart';
+export '../views/profile/legacy/legacy_message_view_screen.dart';
+export '../views/profile/legacy/legacy_screen.dart';
+export '../views/splash screen/onBoardingScreen.dart';

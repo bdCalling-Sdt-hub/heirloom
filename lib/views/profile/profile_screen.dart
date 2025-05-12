@@ -103,14 +103,13 @@ Get.toNamed(AppRoutes.journalScreen);
               icon: Image.asset(AppIcons.familyMembers, height: 18.h),
               label: 'Family Members',
               onTap: () {
-
+                Get.toNamed(AppRoutes.familyMembers);
               },
             ),
             _buildProfileOption(
               icon: Image.asset(AppIcons.support, height: 18.h),
               label: 'Support',
               onTap: () {
-
               },
             ),
             _buildProfileOption(
