@@ -94,7 +94,8 @@ class HomeScreen extends StatelessWidget {
 
               // Journal and Legacy Message
               customCard(sizeH, "Journal", AppIcons.journal),
-              customCard(sizeH, "legacy Message", AppIcons.legecy)
+              customCard(sizeH, "legacy Message", AppIcons.legecy),
+              SizedBox(height: 100.h,)
             ],
           ),
         ),

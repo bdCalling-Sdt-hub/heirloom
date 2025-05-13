@@ -153,6 +153,7 @@ Get.toNamed(AppRoutes.journalScreen);
                 );
               },
             ),
+            SizedBox(height: 100.h,)
           ],
         ),
       ),

@@ -23,9 +23,8 @@ class CustomNavBar extends StatefulWidget {
 class _CustomNavBarState extends State<CustomNavBar> {
   int _currentIndex = 0;
 
-  // List of screens, these will be the screens that appear when you select a nav item
   final List<Widget> _screens = [
-    // Replace with your actual screens
+
 HomeScreen(),
 AiChatScreen(),
     ChatTabBarScreen(),
@@ -35,7 +34,11 @@ ProfileScreen()
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+extendBody: true,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
+        backgroundColor: AppColors.primaryColor,
         title: AppLogo(img: AppImages.appLogo2,height: 30.h,),
         centerTitle: true,
         actions: [
@@ -44,16 +47,19 @@ ProfileScreen()
           }, icon: Badge.count(count: 2, child: Icon(Icons.notifications)))
         ],
       ),
-      body: _screens[_currentIndex], // Display the selected screen
+      body: _screens[_currentIndex],
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 20.w,vertical:Platform.isIOS? 0 : 20.h),
+          padding:  EdgeInsets.symmetric(horizontal: 20.w,vertical:Platform.isIOS? 0 : 10.h),
           child: ClipRRect(
             borderRadius: BorderRadius.all(
-              Radius.circular(50), // Rounded corners for the nav bar
+              Radius.circular(50),
             ),
             child: BottomNavigationBar(
               elevation: 0,
+fixedColor: Colors.blue,
+
+useLegacyColorScheme: true,
               currentIndex: _currentIndex,
               onTap: (index) {
                 setState(() {
@@ -62,7 +68,7 @@ ProfileScreen()
               },
               type: BottomNavigationBarType.fixed,
               backgroundColor: AppColors.navBarColor,
-              selectedItemColor: Colors.purple,  // Highlight active icon
+              // selectedItemColor: Colors.purple,  // Highlight active icon
               unselectedItemColor: Colors.white.withOpacity(0.6), // Dim inactive icons
               selectedFontSize: 0,
               unselectedFontSize: 0,
@@ -89,7 +95,7 @@ ProfileScreen()
                 ),
               ],
             )
-        
+
           ),
         ),
       ),

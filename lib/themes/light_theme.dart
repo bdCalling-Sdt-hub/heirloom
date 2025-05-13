@@ -27,8 +27,6 @@ ThemeData light() => ThemeData(
         foregroundColor: AppColors.textColor,
         shadowColor: Colors.black.withOpacity(0.12),
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: AppColors.buttonSecondColor),
       datePickerTheme: DatePickerThemeData(
         dayStyle: TextStyle(color: AppColors.primaryColor, fontSize: 14.h),
         weekdayStyle: TextStyle(fontSize: 14.h, color: Colors.black),

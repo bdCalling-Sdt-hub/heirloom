@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_bubbles/chat_bubbles.dart'; // Importing the correct package
-import 'package:heirloom/global_widgets/custom_text.dart'; // Assuming you have these custom widgets
+import 'package:heirloom/global_widgets/custom_text.dart';
 import 'package:heirloom/global_widgets/custom_text_field.dart';
 import 'package:heirloom/utils/app_colors.dart'; // Custom colors
-import 'package:heirloom/utils/app_icons.dart'; // Custom icons
+import 'package:heirloom/utils/app_icons.dart';
 
 class AiChatScreen extends StatefulWidget {
   const AiChatScreen({super.key});
@@ -130,6 +130,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 ],
               ),
             ),
+            SizedBox(height: 100.h,),
           ],
         ),
       ),
