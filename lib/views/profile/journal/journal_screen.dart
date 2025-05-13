@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
 import 'package:heirloom/utils/app_colors.dart';
+import 'package:get/get.dart';
+import '../../../global_widgets/dialog.dart';
 
 class JournalScreen extends StatelessWidget {
   const JournalScreen({super.key});
@@ -69,7 +71,25 @@ class JournalScreen extends StatelessWidget {
                                   children: [
                                   IconButton(onPressed: (){}, icon: Icon(FontAwesomeIcons.arrowUpRightFromSquare,color: AppColors.secondaryColor,)),
                                     SizedBox(width: 20.w),
-                                    IconButton(onPressed: (){}, icon: Icon(Icons.delete,color: Colors.red,)),
+                                    IconButton(onPressed: (){
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialog(
+                                            title: "Are you sure you want to delete this Journal?",
+                                            subTitle: "This journal will be permanently deleted from your account.",
+                                            confirmButtonText: "Delete",
+                                            onCancel: () {
+                                              Get.back();
+                                            },
+                                            onConfirm: () async {
+
+                                            },
+                                          );
+                                        },
+                                      );
+
+                                    }, icon: Icon(Icons.delete,color: Colors.red,)),
                                   ],
                                 )
                               ],

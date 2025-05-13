@@ -17,6 +17,7 @@ class AppIcons {
   static const String journal = "$path/journal.png";
   static const String legecy = "$path/legecy.png";
   static const String activity = "$path/activity.png";
+  static const String notification = "$path/notification.png";
 
 
 

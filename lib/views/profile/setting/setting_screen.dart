@@ -87,6 +87,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     context: context,
                     builder: (context) => CustomDialog(
                       title: "Do you want to delete your account?",
+                      subTitle:"All your changes will be deleted and you will no longer be able to access them.",
                       confirmButtonText: 'Delete',
                       confirmButtonColor: Colors.red,
                       onCancel: () {
@@ -125,7 +126,7 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 12.h),
           decoration: BoxDecoration(
-            color: color ?? AppColors.profileCardColor,
+            color: color ?? AppColors.settingCardColor,
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: Row(
@@ -140,7 +141,7 @@ class _SettingScreenState extends State<SettingScreen> {
               const Spacer(),
               noIcon == true
                   ? SizedBox.shrink()
-                  : Icon(Icons.arrow_right, size: 18.h),
+                  : Icon(Icons.arrow_forward_ios_rounded, size: 18.h,color: Colors.white,),
               SizedBox(width: 10.w),
             ],
           ),

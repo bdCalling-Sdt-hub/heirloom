@@ -1,19 +1,24 @@
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:chat_bubbles/chat_bubbles.dart'; // Importing the correct package
-import 'package:heirloom/global_widgets/custom_text.dart'; // Assuming you have these custom widgets
-import 'package:heirloom/global_widgets/custom_text_field.dart';
-import 'package:heirloom/utils/app_colors.dart'; // Custom colors
-import 'package:heirloom/utils/app_icons.dart'; // Custom icons
+import 'package:get/get.dart';
+import 'package:heirloom/global_widgets/custom_text.dart';
+import 'package:heirloom/routes/app_routes.dart';
+import 'package:heirloom/utils/app_images.dart';
+import 'package:heirloom/views/Relation%20chat/chat/profile_about_screen.dart';
 
-class AiChatScreen extends StatefulWidget {
-  const AiChatScreen({super.key});
+import '../../../global_widgets/custom_text_field.dart';
+import '../../../utils/app_colors.dart';
+import '../../../utils/app_icons.dart';
+
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key});
 
   @override
-  _AiChatScreenState createState() => _AiChatScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _AiChatScreenState extends State<AiChatScreen> {
+class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   List<Map<String, String>> messages = [
     {
@@ -46,11 +51,25 @@ class _AiChatScreenState extends State<AiChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomTextTwo(
-          text: 'Apr13, 2025 11:03 AM',
-          textDecoration: TextDecoration.underline,
+        centerTitle: true,
+        title: InkWell(
+          onTap: (){
+            Get.to(ProfileAboutScreen(image: AppImages.model, name: "Akik",useName: "@akik404", conversationId: ""));
+          },
+          child: Row(
+            children: [
+              Image.asset(AppImages.model,height: 30.h,),
+              SizedBox(width: 10.w,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomTextOne(text: "Akik"),
+                  CustomTextTwo(text: "Active 2 hours ago")
+                ],
+              )
+            ],
+          ),
         ),
-
       ),
       body: Padding(
         padding: EdgeInsets.all(10.w),

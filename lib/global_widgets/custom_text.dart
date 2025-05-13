@@ -30,7 +30,7 @@ class CustomTextOne extends StatelessWidget {
   final double top;
   final double bottom;
   final double? fontSize;
-  final FontWeight fontWeight;
+  final FontWeight? fontWeight;
   final Color? color;
   final String text;
   final TextAlign textAlign;
@@ -53,7 +53,7 @@ class CustomTextOne extends StatelessWidget {
         style: TextStyle(
           fontSize: fontSize ?? sizeH*.022,
             // fontFamily: 'Outfit',
-            fontWeight: FontWeight.w800,
+            fontWeight:fontWeight?? FontWeight.w800,
           color: color ?? AppColors.textColor,
         ),
       ),

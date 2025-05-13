@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -57,17 +58,16 @@ class NotificationScreen extends StatelessWidget {
                               height: 40.h,
                               width: 40.w,
                               decoration: BoxDecoration(
-                                color: AppColors.primaryColor.withOpacity(0.4),
+                                color: AppColors.cardColor,
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
-                                Icons.notifications_none,
+                                FontAwesomeIcons.bell,
                                 color: Colors.white,
                               ),
                             ),
                             title: CustomTextOne(
                               text: notification['title'] ?? "No Title",
-                              color: Colors.black,
                               fontSize: 14.sp,
                               maxLine: 1,
                               textOverflow: TextOverflow.ellipsis,
@@ -88,7 +88,6 @@ class NotificationScreen extends StatelessWidget {
                                   children: [
                                     CustomTextOne(
                                       text: formattedDate,
-                                      color: Colors.black,
                                       fontSize: 12.sp,
                                       maxLine: 1,
                                       textOverflow: TextOverflow.ellipsis,
@@ -96,7 +95,6 @@ class NotificationScreen extends StatelessWidget {
                                     SizedBox(width: 5.w),
                                     CustomTextOne(
                                       text: formattedTime,
-                                      color: Colors.black,
                                       fontSize: 12.sp,
                                       maxLine: 1,
                                       textOverflow: TextOverflow.ellipsis,
@@ -109,7 +107,7 @@ class NotificationScreen extends StatelessWidget {
                         ),
                       ),
                       Divider(
-                        color: AppColors.primaryColor,
+                        color: AppColors.cardColor,
                         thickness: 1,
                         indent: 20.w,
                         endIndent: 20.w,

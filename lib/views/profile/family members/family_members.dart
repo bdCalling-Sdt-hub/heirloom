@@ -8,6 +8,8 @@ import 'package:heirloom/utils/app_colors.dart';
 import 'package:heirloom/utils/app_icons.dart';
 import 'package:heirloom/utils/app_images.dart';
 import 'package:get/get.dart';
+
+import '../../../global_widgets/dialog.dart';
 class FamilyMembers extends StatelessWidget {
   const FamilyMembers({super.key});
 
@@ -85,7 +87,22 @@ class FamilyMembers extends StatelessWidget {
                       icon: Icon(Icons.delete_outline,
                           color: Colors.red, size: 20.h),
                       onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialog(
+                              title: "Are you sure you want to delete this Family Request?",
+                              subTitle: "This Request will be permanently deleted from your account.",
+                              confirmButtonText: "Delete",
+                              onCancel: () {
+                                Get.back();
+                              },
+                              onConfirm: () async {
 
+                              },
+                            );
+                          },
+                        );
                       },
                     ),
                   );

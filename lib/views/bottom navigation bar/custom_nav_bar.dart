@@ -2,13 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:heirloom/global_widgets/app_logo.dart';
+import 'package:heirloom/routes/app_routes.dart';
 import 'package:heirloom/utils/app_images.dart';
 import 'package:heirloom/views/ai%20chat/ai_chat_screen.dart';
 import 'package:heirloom/views/home/home_screen.dart';
 import 'package:heirloom/views/profile/profile_screen.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
+import '../Relation chat/chat_tabBar_screen.dart';
 
 class CustomNavBar extends StatefulWidget {
   const CustomNavBar({super.key});
@@ -25,7 +28,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
     // Replace with your actual screens
 HomeScreen(),
 AiChatScreen(),
-    Center(child: CircularProgressIndicator()),
+    ChatTabBarScreen(),
 ProfileScreen()
   ];
 
@@ -36,7 +39,9 @@ ProfileScreen()
         title: AppLogo(img: AppImages.appLogo2,height: 30.h,),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: (){}, icon: Badge.count(count: 2, child: Icon(Icons.notifications)))
+          IconButton(onPressed: (){
+            Get.toNamed(AppRoutes.notificationScreen);
+          }, icon: Badge.count(count: 2, child: Icon(Icons.notifications)))
         ],
       ),
       body: _screens[_currentIndex], // Display the selected screen

@@ -130,7 +130,7 @@ class SignUpScreen extends StatelessWidget {
                         Checkbox(
                           value: rememberMe.value,
                           checkColor: Colors.white,
-                          activeColor: AppColors.buttonColor,
+                          activeColor: AppColors.secondaryColor,
                           onChanged: (value) {
                             rememberMe.value = value!;
                           },

@@ -1,4 +1,6 @@
 
+import '../views/Relation chat/chat/chat_screen.dart';
+import '../views/profile/support/support_screen.dart';
 import 'exports.dart';
 
 class AppRoutes {
@@ -20,6 +22,8 @@ class AppRoutes {
   static const String legacyMessageViewScreen = "/LegacyMessageViewScreen";
   static const String familyMembers = "/FamilyMembers";
   static const String addFamilyMemberScreen = "/AddFamilyMemberScreen";
+  static const String supportScreen = "/SupportScreen";
+  static const String chatScreen = "/ChatScreen";
 
 
 
@@ -46,5 +50,8 @@ class AppRoutes {
         GetPage(name: legacyMessageViewScreen, page: () =>  LegacyMessageViewScreen()),
         GetPage(name: familyMembers, page: () =>  FamilyMembers()),
         GetPage(name: addFamilyMemberScreen, page: () =>  AddFamilyMemberScreen()),
+        GetPage(name: supportScreen, page: () =>  SupportScreen()),
+        GetPage(name: chatScreen, page: () =>  ChatScreen()),
+        GetPage(name: chatScreen, page: () =>  ChatScreen()),
       ];
 }

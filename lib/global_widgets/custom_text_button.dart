@@ -35,7 +35,7 @@ class CustomTextButton extends StatelessWidget {
         },
         style: TextButton.styleFrom(
             padding: EdgeInsets.all(padding ?? sizeH * .015),
-            backgroundColor: color ?? AppColors.buttonColor,
+            backgroundColor: color ?? AppColors.secondaryColor,
             side:  BorderSide(color:borderColor?? Colors.transparent),
             fixedSize: const Size.fromWidth(double.maxFinite),
             shape: RoundedRectangleBorder(

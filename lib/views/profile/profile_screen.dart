@@ -110,6 +110,7 @@ Get.toNamed(AppRoutes.journalScreen);
               icon: Image.asset(AppIcons.support, height: 18.h),
               label: 'Support',
               onTap: () {
+                Get.toNamed(AppRoutes.supportScreen);
               },
             ),
             _buildProfileOption(
@@ -135,7 +136,8 @@ Get.toNamed(AppRoutes.journalScreen);
                   context: context,
                   builder: (BuildContext context) {
                     return CustomDialog(
-                      title: "Are you sure you want to \n LogOut ",
+                      title: "Are you sure you want to LogOut?",
+                      subTitle: "You will be logged out of your account",
                       onCancel: () {
                         Get.back();
                       },
