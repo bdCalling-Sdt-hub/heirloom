@@ -8,7 +8,7 @@ import '../../../helpers/prefs_helper.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_constant.dart';
 import '../../../utils/app_icons.dart';
-import 'appData.dart';
+import 'app_data.dart';
 import 'change password/change_password.dart';
 
 class SettingScreen extends StatefulWidget {

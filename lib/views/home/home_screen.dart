@@ -131,7 +131,6 @@ class HomeScreen extends StatelessWidget {
       elevation: 8.0,
     ).then((selectedMood) {
       if (selectedMood != null) {
-        print('Selected mood: $selectedMood');
       }
     });
   }

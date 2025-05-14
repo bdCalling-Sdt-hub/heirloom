@@ -10,7 +10,7 @@ import '../../routes/app_routes.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_constant.dart';
 import '../../utils/app_icons.dart';
-import '../profile/setting/appData.dart';
+import '../profile/setting/app_data.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});

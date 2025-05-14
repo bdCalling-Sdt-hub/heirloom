@@ -59,6 +59,7 @@ class AppData extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
+                    color: AppColors.settingCardColor,
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -70,7 +71,7 @@ class AppData extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: HtmlWidget(
                         settingController.appContent.value,
-                        textStyle: TextStyle(fontSize: 14.sp),
+                        textStyle: TextStyle(fontSize: 14.sp,color: AppColors.textColor),
                       ),
                     ),
                   ),
