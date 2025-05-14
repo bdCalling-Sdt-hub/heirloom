@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heirloom/global_widgets/custom_chat_title.dart';
-import 'package:heirloom/global_widgets/custom_text_field.dart';
-import 'package:heirloom/routes/app_routes.dart';
-
-import '../../../global_widgets/custom_text.dart';
-import '../../../utils/app_colors.dart';
+import 'package:heirloom/global_widgets/custom_text.dart';
+import 'package:heirloom/global_widgets/custom_text_button.dart';
+import 'package:heirloom/utils/app_colors.dart';
+import '../../../global_widgets/custom_chat_title.dart';
+import '../../../global_widgets/custom_text_field.dart';
+import '../../../routes/app_routes.dart';
 import '../../../utils/app_images.dart';
 import 'package:get/get.dart';
 
-class InboxScreen extends StatefulWidget {
-  const InboxScreen({super.key});
+class FriendScreen extends StatefulWidget {
+  const FriendScreen({super.key});
 
   @override
-  State<InboxScreen> createState() => _InboxScreenState();
+  State<FriendScreen> createState() => _FriendScreenState();
 }
 
-class _InboxScreenState extends State<InboxScreen> {
+class _FriendScreenState extends State<FriendScreen> {
   final TextEditingController searchTEController = TextEditingController();
+ bool requestSent=false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +40,12 @@ class _InboxScreenState extends State<InboxScreen> {
             SizedBox(
               height: 10.h,
             ),
+            Align(
+                alignment: Alignment.topLeft,
+                child: CustomTextOne(text: "Add Friends",)),
+            SizedBox(
+              height: 10.h,
+            ),
             Flexible(
               child: ListView.builder(
                 itemCount: 10,
@@ -51,7 +58,14 @@ class _InboxScreenState extends State<InboxScreen> {
                         title: 'Akik',
                         subTitle: "Hey How Are You?",
                         img: AppImages.model,
-                        time: CustomTextTwo(text: "5 min")),
+                        time: SizedBox(
+                          width: 100.w,
+                          child: CustomTextButton(text:requestSent==true?"Request Sent": "Request", onTap: (){
+                            requestSent=true;
+                            setState(() {
+                            });
+                          },fontSize: 12.sp,padding: 2,color:requestSent==true?Colors.transparent: Colors.green,borderColor: AppColors.textFieldBorderColor,),
+                        )),
                   );
                 },
               ),
@@ -61,6 +75,7 @@ class _InboxScreenState extends State<InboxScreen> {
       ),
     );
   }
+
   @override
   void dispose() {
     // TODO: implement dispose

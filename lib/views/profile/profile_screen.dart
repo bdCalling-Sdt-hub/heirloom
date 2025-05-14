@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heirloom/utils/app_images.dart';
 import 'package:heirloom/views/profile/profile_update.dart';
 import 'package:heirloom/views/profile/support_screen.dart';
 
@@ -52,7 +53,7 @@ class ProfileScreen extends StatelessWidget {
               child: CircleAvatar(
                 radius: 50.r,
                 backgroundColor: Colors.grey[300],
-                backgroundImage: NetworkImage(""), // Load image from network
+                backgroundImage: NetworkImage(AppImages.model), // Load image from network
               ),
             ),
 
@@ -153,7 +154,7 @@ Get.toNamed(AppRoutes.journalScreen);
                 );
               },
             ),
-            SizedBox(height: 100.h,)
+            SizedBox(height: 20.h,)
           ],
         ),
       ),

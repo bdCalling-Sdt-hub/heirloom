@@ -62,6 +62,7 @@ class _ProfileAboutScreenState extends State<ProfileAboutScreen> {
                   }),
               _buildProfileOption(
                 noIcon: true,
+                padding: 8.r,
                 title: 'Chat With Ai Twin',
                 toogle: true,
                 switchValue: switchValue,
@@ -86,6 +87,7 @@ Widget _buildProfileOption({
   Color? textColor,
   bool? noIcon,
   bool? toogle,
+  double? padding,
   bool switchValue = false, // Default value for the Switch
   ValueChanged<bool>? onSwitchChanged, // Callback for the Switch
 }) {
@@ -94,7 +96,7 @@ Widget _buildProfileOption({
     child: InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(16.r),
+        padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: padding??16.h),
         decoration: BoxDecoration(
           color: AppColors.profileCardColor,
           borderRadius: BorderRadius.all(Radius.circular(16)),

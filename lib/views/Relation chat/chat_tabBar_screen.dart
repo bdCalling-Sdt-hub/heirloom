@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
 import 'package:heirloom/views/Relation%20chat/chat/inbox_screen.dart';
+import 'package:heirloom/views/Relation%20chat/friend/friend_screen.dart';
+import 'package:heirloom/views/Relation%20chat/requested/requested_screen.dart';
 
 import '../../utils/app_colors.dart';
 
@@ -50,7 +52,9 @@ class ChatTabBarScreen extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-InboxScreen()
+                  InboxScreen(),
+                  RequestedScreen(),
+             FriendScreen()
                 ],
               ),
             ),

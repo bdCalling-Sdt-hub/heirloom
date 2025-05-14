@@ -5,7 +5,7 @@ class AppImages {
   static const String appBg = "$baseUrl/bg3.svg";
   static const String passChange = "$baseUrl/pass_change.svg";
   static const String homeScreenImage = "$baseUrl/homeImage.png";
-  static const String model = "$baseUrl/model.png";
+  static const String model = "https://images6.alphacoders.com/123/1231890.png";
 
 
 

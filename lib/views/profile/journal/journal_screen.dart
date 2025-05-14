@@ -24,7 +24,7 @@ class JournalScreen extends StatelessWidget {
           children: [
             CustomTextOne(
               text: 'Your All Journal',
-              fontSize: 18.sp,
+
       
             ),
             SizedBox(height: 10.h,),

@@ -5,7 +5,8 @@ import '../utils/app_colors.dart';
 import 'custom_text.dart';
 
 class CustomChatTile extends StatelessWidget {
-  final String title, subTitle, img, time;
+  final String title, subTitle, img;
+  final Widget time;
   const CustomChatTile({
     super.key,
     required this.title,
@@ -38,7 +39,7 @@ class CustomChatTile extends StatelessWidget {
             CircleAvatar(
               radius: 20.r,
               backgroundColor: AppColors.primaryColor,
-              backgroundImage: AssetImage(img),
+              backgroundImage: NetworkImage(img),
             ),
             SizedBox(width: 15.w),
             Expanded(
@@ -63,7 +64,7 @@ class CustomChatTile extends StatelessWidget {
               ),
             ),
 
-            CustomTextTwo(text: time)
+          time,
           ],
         ),
       ),

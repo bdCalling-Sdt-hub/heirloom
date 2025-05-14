@@ -57,7 +57,7 @@ class _ReportScreenState extends State<ReportScreen> {
             CustomTextTwo(
               text: 'Help us understanding what’s happening',
               fontSize: 14.sp,
-              color: Colors.black,
+
             ),
             SizedBox(height: 20.h),
 
@@ -75,14 +75,14 @@ class _ReportScreenState extends State<ReportScreen> {
                     });
                   },
                   child: Container(
-                    margin: EdgeInsets.only(bottom: 12.h),
+                    margin: EdgeInsets.only(bottom: 6.h),
                     padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
                     decoration: BoxDecoration(
-                      color: AppColors.textFieldFillColor,
+                      color: AppColors.settingCardColor,
                       border: Border.all(
                         color: selectedOption == option
-                            ? AppColors.primaryColor
-                            : Colors.grey,
+                            ?Colors.grey: AppColors.profileCardColor
+
                       ),
                       borderRadius: BorderRadius.circular(8.r),
                     ),
@@ -92,7 +92,7 @@ class _ReportScreenState extends State<ReportScreen> {
                           selectedOption == option
                               ? Icons.radio_button_checked
                               : Icons.radio_button_off,
-                          color: AppColors.primaryColor,
+                          color: Colors.white,
                         ),
                         SizedBox(width: 12.w),
                         CustomTextTwo(
@@ -106,7 +106,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 );
               },
             ),
-            SizedBox(height: 20.h),
+
 
             // Next Button
             CustomTextButton(
@@ -121,8 +121,10 @@ class _ReportScreenState extends State<ReportScreen> {
                   Get.snackbar("!!!!!!!", 'Please select a report option');
                 }
               },
-              color: AppColors.primaryColor,
+
             ),
+
+            SizedBox(height: 20.h),
           ],
         ),
       ),

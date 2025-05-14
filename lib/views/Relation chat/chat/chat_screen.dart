@@ -58,7 +58,12 @@ class _ChatScreenState extends State<ChatScreen> {
           },
           child: Row(
             children: [
-              Image.asset(AppImages.model,height: 30.h,),
+
+              CircleAvatar(
+                radius: 20.r,
+                backgroundColor: AppColors.primaryColor,
+                backgroundImage: NetworkImage(AppImages.model),
+              ),
               SizedBox(width: 10.w,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

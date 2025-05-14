@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heirloom/utils/app_images.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../global_widgets/custom_text.dart';
@@ -107,7 +108,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                       backgroundImage: _profileImage != null
                           ? FileImage(
                               _profileImage!) // If image is picked, display it
-                          : AssetImage('assets/default_profile_image.png')
+                          : NetworkImage(AppImages.model)
                               as ImageProvider, // Default image
                       onBackgroundImageError: (error, stackTrace) {},
                     ),
@@ -173,7 +174,7 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                   }
                   return null;
                 },
-                borderRadio: 12.r,
+                borderRadio: 8.r,
               ),
 
               CustomTextField(

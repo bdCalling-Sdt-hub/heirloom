@@ -130,7 +130,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 100.h,),
+
           ],
         ),
       ),

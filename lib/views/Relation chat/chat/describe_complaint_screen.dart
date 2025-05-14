@@ -50,20 +50,19 @@ class _DescribeComplaintScreenState extends State<DescribeComplaintScreen> {
               CustomTextTwo(
                   text: 'Help us understand what’s happening',
                   fontSize: 14.sp,
-                  color: Colors.black
               ),
         
         
               // Selected option
               Card(
-                color: AppColors.textFieldFillColor,
+                color: AppColors.settingCardColor,
                 child: Padding(
                   padding:  EdgeInsets.all(12.h),
                   child: Row(
                     children: [
                       const Icon(
                         Icons.radio_button_checked,
-                        color: AppColors.primaryColor,
+                        color: Colors.white,
                       ),
                       SizedBox(width: 5.w,),
                       CustomTextTwo(
@@ -83,7 +82,6 @@ class _DescribeComplaintScreenState extends State<DescribeComplaintScreen> {
                 hintText: "Type your message...",
                 maxLine: 5,
                 borderRadio: 12,
-                filColor: Colors.transparent,
               ),
               SizedBox(height: 20.h),
         
@@ -100,7 +98,6 @@ class _DescribeComplaintScreenState extends State<DescribeComplaintScreen> {
                     Get.snackbar("!!!!!", 'Please describe your complaint');
                   }
                 },
-                color: AppColors.primaryColor,
               ),
             ],
           ),

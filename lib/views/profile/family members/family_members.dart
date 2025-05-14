@@ -147,7 +147,7 @@ class FamilyMembers extends StatelessWidget {
               CircleAvatar(
                 radius: 20.r,
                 backgroundColor: AppColors.primaryColor,
-                backgroundImage: AssetImage(AppImages.model),
+                backgroundImage: NetworkImage(AppImages.model),
               ),
               SizedBox(width: 15.w),
               Column(

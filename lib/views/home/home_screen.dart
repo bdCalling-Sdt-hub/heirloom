@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
 import 'package:heirloom/global_widgets/custom_text_button.dart';
+import 'package:heirloom/routes/app_routes.dart';
 import 'package:heirloom/utils/app_colors.dart';
 import 'package:heirloom/utils/app_icons.dart';
 import 'package:heirloom/utils/app_images.dart';
-
+import 'package:get/get.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -93,9 +94,13 @@ class HomeScreen extends StatelessWidget {
               ),
 
               // Journal and Legacy Message
-              customCard(sizeH, "Journal", AppIcons.journal),
-              customCard(sizeH, "legacy Message", AppIcons.legecy),
-              SizedBox(height: 100.h,)
+              customCard(sizeH, "Journal", AppIcons.journal,(){
+                Get.toNamed(AppRoutes.journalScreen);
+              }),
+              customCard(sizeH, "legacy Message", AppIcons.legecy,(){
+                Get.toNamed(AppRoutes.legacyScreen);
+              }),
+              SizedBox(height: 20.h,)
             ],
           ),
         ),
@@ -131,25 +136,31 @@ class HomeScreen extends StatelessWidget {
     });
   }
 
-  Container customCard(double sizeH, String text, icon) {
-    return Container(
-      width: double.infinity,
-      height: sizeH * .1,
-      decoration: BoxDecoration(
-        color: AppColors.cardColor.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(15.r),
-        border: Border.fromBorderSide(BorderSide(color: AppColors.cardColor)),
-      ),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              icon,
-              height: sizeH * .05,
-            ),
-            CustomTextOne(text: text),
-          ],
+  Widget customCard(double sizeH, String text, icon, Function onTap) {
+    return InkWell(
+      onTap: (){
+        onTap();
+      },
+      child: Container(
+        width: double.infinity,
+        height: sizeH * .1,
+        decoration: BoxDecoration(
+          color: AppColors.cardColor.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(15.r),
+          border: Border.fromBorderSide(BorderSide(color: AppColors.cardColor)),
+        ),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                icon,
+                height: sizeH * .05,
+              ),
+              SizedBox(width: 10.w,),
+              CustomTextOne(text: text),
+            ],
+          ),
         ),
       ),
     );
