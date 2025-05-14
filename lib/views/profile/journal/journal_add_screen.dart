@@ -7,18 +7,17 @@ import 'package:intl/intl.dart';
 
 import '../../../global_widgets/custom_text_field.dart'; // For date formatting
 
-class AddLegacyMessageScreen extends StatefulWidget {
-  const AddLegacyMessageScreen({super.key});
+class JournalAddScreen extends StatefulWidget {
+  const JournalAddScreen({super.key});
 
   @override
-  _AddLegacyMessageScreenState createState() => _AddLegacyMessageScreenState();
+  _JournalAddScreenState createState() => _JournalAddScreenState();
 }
 
-class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
+class _JournalAddScreenState extends State<JournalAddScreen> {
   final TextEditingController _messageController = TextEditingController();
-  final TextEditingController _recipientController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
-  String _recipient = "Alja"; // Default value, can be dynamic
   DateTime? _deliveryDate;
 
   // Method to pick the date
@@ -46,7 +45,7 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
     return Scaffold(
       appBar: AppBar(
         title: CustomTextOne(
-          text: 'Legacy Message',
+          text: 'Add Journal',
         ),
       ),
       body: SingleChildScrollView(
@@ -58,24 +57,20 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
             children: [
               // Recipient Field (Search/Select recipient)
               CustomTextOne(
-                text: 'Recipient',
+                text: 'Title',
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textColor,
               ),
 
               CustomTextField(
-                controller: _recipientController,
-                hintText: 'Search or select recipient',
-                suffixIcon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
+                controller: _titleController,
+                hintText: 'Enter your title',
               ),
 
               // Delivery Trigger (Date Picker)
               CustomTextOne(
-                text: 'Delivery Trigger',
+                text: 'Date',
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textColor,
@@ -104,16 +99,15 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
 
               CustomTextField(
                 controller: _messageController,
-                hintText: 'Type your legacy message...',
+                hintText: 'Type your journal message...',
                 maxLine: 5,
-                maxLength: 120,
               ),
 
               SizedBox(
                 height: 20.h,
               ),
               // Compose Legacy Button
-              CustomTextButton(text: 'Compose Legacy', onTap: () {})
+              CustomTextButton(text: 'Compose Journal', onTap: () {})
             ],
           ),
         ),
@@ -126,7 +120,7 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
     super.dispose();
     _messageController.dispose();
     _dateController.dispose();
-    _recipientController.dispose();
+    _titleController.dispose();
 
   }
 }

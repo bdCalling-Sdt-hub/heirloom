@@ -18,3 +18,6 @@ export '../views/profile/legacy/add_legacy_message_screen.dart';
 export '../views/profile/legacy/legacy_message_view_screen.dart';
 export '../views/profile/legacy/legacy_screen.dart';
 export '../views/splash screen/onBoardingScreen.dart';
+export '../views/Relation chat/chat/chat_screen.dart';
+export '../views/profile/journal/journal_add_screen.dart';
+export '../views/profile/support/support_screen.dart';

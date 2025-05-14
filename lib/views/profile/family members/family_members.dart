@@ -10,9 +10,16 @@ import 'package:heirloom/utils/app_images.dart';
 import 'package:get/get.dart';
 
 import '../../../global_widgets/dialog.dart';
-class FamilyMembers extends StatelessWidget {
+import '../../../global_widgets/relationship_bottomSheet.dart';
+class FamilyMembers extends StatefulWidget {
   const FamilyMembers({super.key});
 
+  @override
+  State<FamilyMembers> createState() => _FamilyMembersState();
+}
+
+class _FamilyMembersState extends State<FamilyMembers> {
+  String selectedRelationship = "Brother";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,9 +38,7 @@ class FamilyMembers extends StatelessWidget {
               onTap: () {
                 Get.toNamed(AppRoutes.addFamilyMemberScreen);
               },
-              color: Colors.transparent,
-              borderColor: AppColors.textFieldBorderColor,
-              textColor: AppColors.secondaryColor,
+
             ),
             // "Review Family Members" Section
             SizedBox(height: 15.h),
@@ -49,13 +54,54 @@ class FamilyMembers extends StatelessWidget {
                     name: "Kakashi hatake",
                     relation: "Brother",
                     widthSize: 10.w,
-                    icon1: Image.asset(
-                      AppIcons.denied,
-                      height: 25.h,
+                    icon1: InkWell(
+                      onTap: (){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialog(
+                              title: "Are you sure you want to delete this Family Request?",
+                              subTitle: "This Request will be permanently deleted from your account.",
+                              confirmButtonText: "Delete",
+                              onCancel: () {
+                                Get.back();
+                              },
+                              onConfirm: ()  {
+
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: Image.asset(
+                        AppIcons.denied,
+                        height: 25.h,
+                      ),
                     ),
-                    icon2: Image.asset(
-                      AppIcons.approve,
-                      height: 25.h,
+                    icon2: InkWell(
+                      onTap: (){
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialog(
+                              title: "Are you certain you would like to add this individual as a member of your family?",
+                              subTitle: "This action will associate the individual with your family group. Please confirm your decision.",
+                              confirmButtonText: "Confirm",
+                              confirmButtonColor: Colors.green,
+                              onCancel: () {
+                                Get.back();
+                              },
+                              onConfirm: ()  {
+
+                              },
+                            );
+                          },
+                        );
+                      },
+                      child: Image.asset(
+                        AppIcons.approve,
+                        height: 25.h,
+                      ),
                     ),
                   );
                 },
@@ -72,7 +118,7 @@ class FamilyMembers extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return buildFamilyMemberOption(
                     name: "Ronoroa Zoro",
-                    relation: "Brother (Pending)",
+                    relation: "$selectedRelationship (Pending)",
                     icon1: IconButton(
                       icon: Icon(
                         FontAwesomeIcons.penToSquare,
@@ -80,7 +126,15 @@ class FamilyMembers extends StatelessWidget {
                         size: 16.h,
                       ),
                       onPressed: () {
-
+                        Get.bottomSheet(
+                          RelationshipBottomSheet(
+                            onSelectRelationship: (relationship) {
+                              setState(() {
+                                selectedRelationship = relationship;
+                              });
+                            },
+                          ),
+                        );
                       },
                     ),
                     icon2: IconButton(
@@ -91,8 +145,8 @@ class FamilyMembers extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return CustomDialog(
-                              title: "Are you sure you want to delete this Family Request?",
-                              subTitle: "This Request will be permanently deleted from your account.",
+                              title: "Are you sure you want to delete this Family Member?",
+                              subTitle: "It will be permanently deleted from your account.",
                               confirmButtonText: "Delete",
                               onCancel: () {
                                 Get.back();

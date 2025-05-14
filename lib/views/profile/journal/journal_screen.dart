@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
+import 'package:heirloom/global_widgets/custom_text_button.dart';
+import 'package:heirloom/routes/app_routes.dart';
 import 'package:heirloom/utils/app_colors.dart';
 import 'package:get/get.dart';
 import '../../../global_widgets/dialog.dart';
@@ -22,9 +24,13 @@ class JournalScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            CustomTextButton(text: "+ Add Journal", onTap: (){
+
+              Get.toNamed(AppRoutes.journalAddScreen);
+            },color: AppColors.settingCardColor,),
+            SizedBox(height: 10.h,),
             CustomTextOne(
               text: 'Your All Journal',
-
       
             ),
             SizedBox(height: 10.h,),
@@ -43,7 +49,7 @@ class JournalScreen extends StatelessWidget {
                       child: ExpansionTile(
                       collapsedIconColor: Colors.white,
                         iconColor: Colors.white,
-            backgroundColor: AppColors.profileCardColor,
+                       backgroundColor: AppColors.profileCardColor,
 
                         title: CustomTextOne(
                           text: 'Journal Entry ${index + 1}',
@@ -69,7 +75,9 @@ class JournalScreen extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                  IconButton(onPressed: (){}, icon: Icon(FontAwesomeIcons.arrowUpRightFromSquare,color: AppColors.secondaryColor,)),
+                                  IconButton(onPressed: (){
+                                    Get.toNamed(AppRoutes.journalAddScreen);
+                                  }, icon: Icon(FontAwesomeIcons.edit,color:Colors.white,)),
                                     SizedBox(width: 20.w),
                                     IconButton(onPressed: (){
                                       showDialog(

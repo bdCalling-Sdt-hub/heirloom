@@ -51,7 +51,7 @@ class CustomDialog extends StatelessWidget {
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.textColor,
-              maxLine: 2,
+
             ),
             SizedBox(height: 8.h),
             // Title Text
