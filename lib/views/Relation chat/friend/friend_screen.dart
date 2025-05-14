@@ -50,23 +50,18 @@ class _FriendScreenState extends State<FriendScreen> {
               child: ListView.builder(
                 itemCount: 10,
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: (){
-                      Get.toNamed(AppRoutes.chatScreen);
-                    },
-                    child: CustomChatTile(
-                        title: 'Akik',
-                        subTitle: "Hey How Are You?",
-                        img: AppImages.model,
-                        time: SizedBox(
-                          width: 100.w,
-                          child: CustomTextButton(text:requestSent==true?"Request Sent": "Request", onTap: (){
-                            requestSent=true;
-                            setState(() {
-                            });
-                          },fontSize: 12.sp,padding: 2,color:requestSent==true?Colors.transparent: Colors.green,borderColor: AppColors.textFieldBorderColor,),
-                        )),
-                  );
+                  return CustomChatTile(
+                      title: 'Akik',
+                      subTitle: "Hey How Are You?",
+                      img: AppImages.model,
+                      time: SizedBox(
+                        width: 100.w,
+                        child: CustomTextButton(text:requestSent==true?"Request Sent": "Request", onTap: (){
+                          requestSent=true;
+                          setState(() {
+                          });
+                        },fontSize: 12.sp,padding: 2,color:requestSent==true?Colors.transparent: Colors.green,borderColor: AppColors.textFieldBorderColor,),
+                      ));
                 },
               ),
             )

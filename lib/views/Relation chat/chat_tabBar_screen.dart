@@ -54,7 +54,7 @@ class ChatTabBarScreen extends StatelessWidget {
                 children: [
                   InboxScreen(),
                   RequestedScreen(),
-             FriendScreen()
+                   FriendScreen()
                 ],
               ),
             ),
