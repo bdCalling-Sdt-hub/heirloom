@@ -111,7 +111,7 @@ class SignInScreen extends StatelessWidget {
                          if (formKey.currentState?.validate() ?? false) {
                            FocusScope.of(context).unfocus();
                            TextInput.finishAutofillContext(shouldSave: true);
-                           Get.toNamed(AppRoutes.customNavBar);
+                           Get.offAllNamed(AppRoutes.customNavBar);
                           // controller.handleLogIn(emailTEController.text, passTEController.text);
                          }
                        },

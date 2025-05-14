@@ -57,7 +57,7 @@ class JournalScreen extends StatelessWidget {
 
                         ),
                         subtitle: CustomTextTwo(
-                          text: 'Short description of the journal...',
+                          text: 'Date : 10.00 AM, 14 May 2025',
                           textAlign: TextAlign.start,
                         ),
                         children: [

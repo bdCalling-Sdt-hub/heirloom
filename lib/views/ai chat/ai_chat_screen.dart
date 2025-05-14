@@ -45,17 +45,15 @@ class _AiChatScreenState extends State<AiChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: CustomTextTwo(
-          text: 'Apr13, 2025 11:03 AM',
-          textDecoration: TextDecoration.underline,
-        ),
-
-      ),
       body: Padding(
         padding: EdgeInsets.all(10.w),
         child: Column(
           children: [
+            CustomTextTwo(
+              text: 'Apr13, 2025 11:03 AM',
+              textDecoration: TextDecoration.underline,
+            ),
+            SizedBox(height: 10.h,),
             Expanded(
               child: ListView.builder(
                 itemCount: messages.length,
