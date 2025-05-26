@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heirloom/Controller/profile/profile_controller.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
 import 'package:heirloom/global_widgets/custom_text_button.dart';
 import 'package:heirloom/routes/app_routes.dart';
@@ -7,9 +8,22 @@ import 'package:heirloom/utils/app_colors.dart';
 import 'package:heirloom/utils/app_icons.dart';
 import 'package:heirloom/utils/app_images.dart';
 import 'package:get/get.dart';
-class HomeScreen extends StatelessWidget {
+import 'package:intl/intl.dart';
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  ProfileController profileController =ProfileController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    profileController.fetchProfileData();
+  }
   @override
   Widget build(BuildContext context) {
     final sizeH = MediaQuery.of(context).size.height;
@@ -31,9 +45,9 @@ class HomeScreen extends StatelessWidget {
                       child: Image.asset(AppImages.homeScreenImage, height: sizeH * .35, width: double.infinity, fit: BoxFit.cover)),
                   Column(
                     children: [
-                      CustomTextOne(
-                        text: "Welcome Back, Monkey D. Luffy",
-                      ),
+                    Obx((){return   CustomTextOne(
+                      text: "Welcome Back, ${profileController.fullName.value}",
+                    );}),
                       CustomTextTwo(
                         text: "Today’s a good day to preserve memories.",
                         color: AppColors.secondaryColor.withOpacity(0.8),
@@ -62,9 +76,9 @@ class HomeScreen extends StatelessWidget {
                           fontSize: sizeH * .018,
                         ),
                         CustomTextTwo(
-                          text: "Apr13,2025 11:03 AM",
+                          text: DateFormat('d MMMM, yyyy, hh.mm a').format(DateTime.now()),
                           textDecoration: TextDecoration.underline,
-                        )
+                        ),
                       ],
                     ),
                     Divider(),
@@ -88,7 +102,10 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    CustomTextTwo(text: "Your mood: 😊 Hopeful")
+               Obx((){
+                 return      CustomTextTwo(text: "Your mood: ${profileController.mood.value}");
+
+               })
                   ],
                 ),
               ),
@@ -119,7 +136,7 @@ class HomeScreen extends StatelessWidget {
 
     final List<String> moodOptions = ['😄 Peaceful', '🤩 Grateful', '😊 Hopeful', '😐 Lonely', '😢 Sad'];
 
-    await showMenu(
+    final selectedMood = await showMenu<String>(
       context: context,
       position: RelativeRect.fromLTRB(left, top, left + size.width, top),
       items: moodOptions.map((mood) {
@@ -129,11 +146,16 @@ class HomeScreen extends StatelessWidget {
         );
       }).toList(),
       elevation: 8.0,
-    ).then((selectedMood) {
-      if (selectedMood != null) {
-      }
-    });
+    );
+
+    if (selectedMood != null) {
+      // Update mood through controller and then fetch updated data
+      await profileController.updateProfileData(updatedUserMood: selectedMood);
+      profileController.fetchProfileData();
+
+    }
   }
+
 
   Widget customCard(double sizeH, String text, icon, Function onTap) {
     return InkWell(

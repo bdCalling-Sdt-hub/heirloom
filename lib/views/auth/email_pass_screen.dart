@@ -12,11 +12,20 @@ import '../../global_widgets/custom_text_field.dart';
 import '../../utils/app_constant.dart';
 import '../../utils/app_icons.dart';
 
-class EmailPassScreen extends StatelessWidget {
+class EmailPassScreen extends StatefulWidget {
   EmailPassScreen({super.key});
+
+  @override
+  State<EmailPassScreen> createState() => _EmailPassScreenState();
+}
+
+class _EmailPassScreenState extends State<EmailPassScreen> {
   final TextEditingController emailTEController = TextEditingController();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   final AuthController controller = Get.put(AuthController());
+
   @override
   Widget build(BuildContext context) {
     final sizeH = MediaQuery.of(context).size.height;
@@ -69,11 +78,12 @@ class EmailPassScreen extends StatelessWidget {
                         height: sizeH * .1,
                       ),
                       Obx(() => CustomTextButton(
-                          text:controller.forgotLoading.value?"Sending....": "Get Verification Code",
+                          text: "Get Verification Code",
+                          isLoading: controller.forgotLoading.value,
                           onTap: () {
                             if (formKey.currentState?.validate() ?? false) {
-                             // controller.handleForgot(emailTEController.text);
-                              Get.to(OtpVerificationScreen(isFormForget: true,));
+                             controller.handleForgot(emailTEController.text);
+
                             }
                           }),),
                     ],
@@ -83,5 +93,11 @@ class EmailPassScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailTEController.dispose();
   }
 }

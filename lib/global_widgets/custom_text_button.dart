@@ -13,43 +13,58 @@ class CustomTextButton extends StatelessWidget {
   final Color? color;
   final Color? textColor;
   final Color? borderColor;
-  final Function onTap;
+  final VoidCallback onTap;
   final double? radius;
+  final bool isLoading; // new flag to show loader
+
   const CustomTextButton({
     super.key,
     required this.text,
-    this.color,
     required this.onTap,
+    this.color,
     this.fontSize,
     this.radius,
     this.textColor,
-    this.padding, this.borderColor,
+    this.padding,
+    this.borderColor,
+    this.isLoading = false, // default to false
   });
 
   @override
   Widget build(BuildContext context) {
     final sizeH = MediaQuery.sizeOf(context).height;
     return TextButton(
-        onPressed: () {
-          onTap();
-        },
-        style: TextButton.styleFrom(
-            padding: EdgeInsets.all(padding ?? sizeH * .015),
-            backgroundColor: color ?? AppColors.secondaryColor,
-            side:  BorderSide(color:borderColor?? Colors.transparent),
-            fixedSize: const Size.fromWidth(double.maxFinite),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(radius??12.r))),
-        child: Text(
-          text,
-          style: TextStyle(
-              color:textColor?? Colors.white,
-              fontSize:fontSize?? sizeH * .022,
-              fontWeight: FontWeight.w600,
-          ),
-        ));
+      onPressed: isLoading ? null : onTap, // disable when loading
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.all(padding ?? sizeH * .015),
+        backgroundColor: color ?? AppColors.secondaryColor,
+        side: BorderSide(color: borderColor ?? Colors.transparent),
+        fixedSize: const Size.fromWidth(double.maxFinite),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radius ?? 12.r),
+        ),
+      ),
+      child: isLoading
+          ? SizedBox(
+        height: fontSize ?? sizeH * .022,
+        width: fontSize ?? sizeH * .022,
+        child: CircularProgressIndicator(
+          color: textColor ?? Colors.white,
+          strokeWidth: 2,
+        ),
+      )
+          : Text(
+        text,
+        style: TextStyle(
+          color: textColor ?? Colors.white,
+          fontSize: fontSize ?? sizeH * .022,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
 }
+
 
 class StyleTextButton extends StatelessWidget {
   final String text;

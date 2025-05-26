@@ -15,12 +15,13 @@ class AuthController extends GetxController {
   RxBool signUpLoading = false.obs;
 
   ///===============Sing up ================<>
-  handleSignUp(String email,password,name) async {
+  handleSignUp(String email,password,name,gender) async {
     signUpLoading(true);
     var body = {
-      "fullName": name.toString(),
+      "username": name.toString(),
       "email": email.toString(),
       "password": password.toString(),
+      "gender": gender.toString()
     };
 print("=================================$body");
     var response = await ApiClient.postData(
@@ -30,9 +31,9 @@ print("=================================$body");
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      debugPrint("==========bearer token save done : ${response.body['data']['accessToken']}");
-      PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['accessToken']);
-      Get.to(OtpVerificationScreen(email: email,isFormForget: false,));
+      debugPrint("==========bearer token save done : ${response.body['data']['token']}");
+      PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['token']);
+      Get.to(()=>OtpVerificationScreen(email: email,isFormForget: false,));
       ToastMessageHelper.successMessageShowToster(response.body["message"]);
 
       signUpLoading(false);
@@ -44,23 +45,24 @@ print("=================================$body");
 
   ///************************************************************************///
 
-  ///===============Verify Email================<>
+  ///===============Verify Otp================<>
   RxBool verifyLoading = false.obs;
 
-  verifyEmail(String otpCode,bool isFormForget) async {
+  verifyOtp(String otpCode,bool isFormForget) async {
     verifyLoading(true);
-    var body = {"oneTimeCode": otpCode.toString()};
+    var body = {"otp": otpCode.toString()};
 print("==================================$body");
     var response = await ApiClient.postData(
         Urls.otpVerify, body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
+      ToastMessageHelper.successMessageShowToster("${response.body["message"]}");
       debugPrint("==========bearer token save done : ${response.body['token']}");
-      await PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['access']['token']);
+      await PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['token']);
       if (isFormForget) {
         Get.toNamed(AppRoutes.resetPassScreen);
       } else {
-        Get.offAllNamed(AppRoutes.signInScreen);
+        Get.toNamed(AppRoutes.selectAgeScreen);
       }
       verifyLoading(false);
     }else {
@@ -75,13 +77,13 @@ print("==================================$body");
 
   reSendOtp(String email) async {
     resendLoading(true);
-    var body = {"email": email};
-
+    var body = {};
     var response = await ApiClient.postData(
-        Urls.otpResend, body);
+        Urls.otpResend(email), body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       ToastMessageHelper.successMessageShowToster("${response.body["message"]}");
+      await PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['token']);
 
       resendLoading(false);
     }else{
@@ -105,8 +107,8 @@ print("==================================$body");
         Urls.login, body,);
     if (response.statusCode == 200 || response.statusCode == 201) {
       ToastMessageHelper.successMessageShowToster(response.body['message']);
-       PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['tokens']['access']['token']);
-       PrefsHelper.setString(AppConstants.userId, response.body['data']['user']['id']);
+       PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['token']);
+       PrefsHelper.setString(AppConstants.userId, response.body['data']['user']['_id']);
       PrefsHelper.setString(AppConstants.isLogged, "true");
       Get.offAllNamed(AppRoutes.customNavBar);
 
@@ -133,7 +135,7 @@ print("==================================$body");
         Urls.forgetPass, body);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      await PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['tokens']['access']['token']);
+      await PrefsHelper.setString(AppConstants.bearerToken, response.body['data']['token']);
       ToastMessageHelper.successMessageShowToster(response.body['message']);
       Get.to(OtpVerificationScreen(
         isFormForget: true,
@@ -148,12 +150,13 @@ print("==================================$body");
 
   RxBool changePasswordLoading = false.obs;
 
-  changePassword(String oldPassword,newPassword) async {
+  changePassword(String oldPassword,newPassword,confirmPassword) async {
     changePasswordLoading(true);
     var body = {
 
       "oldPassword": oldPassword,
       "newPassword": newPassword,
+      "confirmPassword": confirmPassword,
     };
 
     var response = await ApiClient.postData(
@@ -183,14 +186,13 @@ print("==================================$body");
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       ToastMessageHelper.successMessageShowToster(response.body['message']);
-      Get.offAllNamed(AppRoutes.signInScreen);
+      Get.offAllNamed(AppRoutes.passwordChangedUi);
       setPasswordLoading(false);
     }  else {
       ToastMessageHelper.errorMessageShowToster(response.body['message']);
       setPasswordLoading(false);
     }
   }
-
 
 
 

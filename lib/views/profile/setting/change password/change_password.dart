@@ -97,11 +97,12 @@ class ChangePassword extends StatelessWidget {
                               : "Update Password",
                           onTap: () {
                             if (formKey.currentState!.validate()) {
-                              // controller.changePassword(
-                              //   oldPassTEController.text,
-                              //   rePassTEController.text,
-                              // );
-                              Get.offAllNamed(AppRoutes.customNavBar);
+                              controller.changePassword(
+                                oldPassTEController.text,
+                                passTEController.text,
+                                rePassTEController.text,
+                              );
+                              // Get.offAllNamed(AppRoutes.customNavBar);
                             }
                           },
                         ),

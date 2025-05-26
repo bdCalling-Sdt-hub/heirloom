@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:heirloom/utils/app_icons.dart';
-import 'package:heirloom/utils/app_images.dart';
 
 import '../../Controller/auth/auth_controller.dart';
 import '../../global_widgets/app_logo.dart';
@@ -106,13 +105,14 @@ class SignInScreen extends StatelessWidget {
                         ),
                       ),
                      Obx(() =>  CustomTextButton(
-                       text: controller.logInLoading.value?"LoginIng...":"Log in",
+                       text:"Log in",
+                      isLoading: controller.logInLoading.value,
                        onTap: () {
                          if (formKey.currentState?.validate() ?? false) {
                            FocusScope.of(context).unfocus();
                            TextInput.finishAutofillContext(shouldSave: true);
-                           Get.offAllNamed(AppRoutes.customNavBar);
-                          // controller.handleLogIn(emailTEController.text, passTEController.text);
+                           // Get.offAllNamed(AppRoutes.customNavBar);
+                          controller.handleLogIn(emailTEController.text, passTEController.text);
                          }
                        },
                      ),),

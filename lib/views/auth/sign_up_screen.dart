@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../Controller/auth/auth_controller.dart';
@@ -12,20 +13,27 @@ import '../../utils/app_constant.dart';
 import '../../utils/app_icons.dart';
 import '../profile/setting/app_data.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
 
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController userNameTEController = TextEditingController();
+
+  final TextEditingController genderTEController = TextEditingController();
+
   final TextEditingController emailTEController = TextEditingController();
+
   final TextEditingController passTEController = TextEditingController();
+
   final TextEditingController confirmPassTEController = TextEditingController();
 
-
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   final AuthController controller = Get.put(AuthController());
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +45,7 @@ class SignUpScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             const AppLogo(),
-
             Padding(
               padding: EdgeInsets.all(sizeH * .02),
               child: Form(
@@ -49,9 +55,12 @@ class SignUpScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(child: CustomTextOne(text: "Sign Up")),
-                    Center(child: CustomTextTwo(text:"Save and share precious life memories. Sign up for free today")),
+                    Center(
+                        child: CustomTextTwo(
+                            text:
+                                "Save and share precious life memories. Sign up for free today")),
 
-
+                    //userName
                     CustomTextField(
                       controller: userNameTEController,
                       hintText: "Enter a Unique User Name",
@@ -62,10 +71,54 @@ class SignUpScreen extends StatelessWidget {
                         return null;
                       },
                       prefixIcon: Padding(
-                        padding:  EdgeInsets.only(left: sizeW*.03,right: sizeW*.01),
-                        child: Icon(Icons.person,color: Colors.white.withOpacity(0.8),),
+                        padding: EdgeInsets.only(
+                            left: sizeW * .03, right: sizeW * .01),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white.withOpacity(0.8),
+                        ),
                       ),
                     ),
+                    //gender
+                    CustomTextField(
+                      readOnly: true,
+                      controller: genderTEController,
+                      hintText: "Select Gender",
+                      suffixIcon: PopupMenuButton<String>(
+                        icon: const Icon(
+                          Icons.arrow_drop_down_circle_outlined,
+                          color: Colors.white,
+                        ),
+                        onSelected: (String selectedGender) {
+                          genderTEController.text = selectedGender;
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                          const PopupMenuItem<String>(
+                            value: "male",
+                            child: Text("Male"),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: "female",
+                            child: Text("Female"),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: "other",
+                            child: Text("Others"),
+                          ),
+                        ],
+                      ),
+                      prefixIcon: Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: sizeW*.02),
+                        child: Icon(FontAwesomeIcons.venus,size: sizeH*.024,color: Colors.white,),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Gender cannot be empty";
+                        }
+                        return null;
+                      },
+                    ),
+                    //email
                     CustomTextField(
                       controller: emailTEController,
                       autofillHints: const [AutofillHints.email],
@@ -82,10 +135,15 @@ class SignUpScreen extends StatelessWidget {
                         return null;
                       },
                       prefixIcon: Padding(
-                        padding:  EdgeInsets.only(left: sizeW*.03,right: sizeW*.01),
-                        child: Image.asset(AppIcons.email,height: sizeH*.02,),
+                        padding: EdgeInsets.only(
+                            left: sizeW * .03, right: sizeW * .01),
+                        child: Image.asset(
+                          AppIcons.email,
+                          height: sizeH * .02,
+                        ),
                       ),
                     ),
+                    //password
                     CustomTextField(
                       controller: passTEController,
                       hintText: "Enter Password",
@@ -99,13 +157,16 @@ class SignUpScreen extends StatelessWidget {
                         }
                         return null;
                       },
-
                       prefixIcon: Padding(
-                        padding:  EdgeInsets.only(left: sizeW*.03,right: sizeW*.01),
-                        child: Image.asset(AppIcons.password,height: sizeH*.02,),
+                        padding: EdgeInsets.only(
+                            left: sizeW * .03, right: sizeW * .01),
+                        child: Image.asset(
+                          AppIcons.password,
+                          height: sizeH * .02,
+                        ),
                       ),
                     ),
-
+                    //confirm password
                     CustomTextField(
                       controller: confirmPassTEController,
                       hintText: "Re-enter your password",
@@ -119,49 +180,53 @@ class SignUpScreen extends StatelessWidget {
                         }
                         return null;
                       },
-
                       prefixIcon: Padding(
-                        padding:  EdgeInsets.only(left: sizeW*.03,right: sizeW*.01),
-                        child: Image.asset(AppIcons.password,height: sizeH*.02,),
+                        padding: EdgeInsets.only(
+                            left: sizeW * .03, right: sizeW * .01),
+                        child: Image.asset(
+                          AppIcons.password,
+                          height: sizeH * .02,
+                        ),
                       ),
                     ),
                     Obx(() => Row(
-                      children: [
-                        Checkbox(
-                          value: rememberMe.value,
-                          checkColor: Colors.white,
-                          activeColor: AppColors.secondaryColor,
-                          onChanged: (value) {
-                            rememberMe.value = value!;
-                          },
-                        ),
-                        const CustomTextTwo(text: "Agree with"),
-                        InkWell(
-                            onTap: () {
-                              Get.to(() => AppData(type: "terms"));
-                            },
-                            child: const CustomTextTwo(
-                              text: " Terms of Services",
-                              textDecoration: TextDecoration.underline,
-                            )),
-                      ],
-                    )),
+                          children: [
+                            Checkbox(
+                              value: rememberMe.value,
+                              checkColor: Colors.white,
+                              activeColor: AppColors.secondaryColor,
+                              onChanged: (value) {
+                                rememberMe.value = value!;
+                              },
+                            ),
+                            const CustomTextTwo(text: "Agree with"),
+                            InkWell(
+                                onTap: () {
+                                  Get.to(() => AppData(type: "terms"));
+                                },
+                                child: const CustomTextTwo(
+                                  text: " Terms of Services",
+                                  textDecoration: TextDecoration.underline,
+                                )),
+                          ],
+                        )),
 
                     // sign up button
                     Obx(() => CustomTextButton(
-                      text: controller.signUpLoading.value ? "Registering..." : "Register",
-                      onTap: () {
-                        if (formKey.currentState?.validate() ?? false) {
+                          text: "Register",
+                          isLoading: controller.signUpLoading.value,
+                          onTap: () {
+                            if (formKey.currentState?.validate() ?? false) {
+                              controller.handleSignUp(
+                                emailTEController.text,
+                                passTEController.text,
+                                userNameTEController.text,
+                                genderTEController.text
 
-                          Get.toNamed(AppRoutes.otpVerificationScreen);
-                          // controller.handleSignUp(
-                          //   emailTEController.text,
-                          //   passTEController.text,
-                          //   nameTEController.text,
-                          // );
-                        }
-                      },
-                    )),
+                              );
+                            }
+                          },
+                        )),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -176,7 +241,9 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: sizeH*.01,),
+                    SizedBox(
+                      height: sizeH * .01,
+                    ),
                   ],
                 ),
               ),
@@ -185,5 +252,15 @@ class SignUpScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    userNameTEController.dispose();
+    genderTEController.dispose();
+    passTEController.dispose();
+    emailTEController.dispose();
+    confirmPassTEController.dispose();
   }
 }

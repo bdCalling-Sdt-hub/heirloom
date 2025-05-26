@@ -13,7 +13,6 @@ class AppRoutes {
   static const String customNavBar = "/CustomNavBar";
   static const String onboardingScreen = "/OnboardingScreen";
   static const String selectAgeScreen = "/SelectAgeScreen";
-  static const String othersInfoScreen = "/OthersInfoScreen";
   static const String journalScreen = "/JournalScreen";
   static const String legacyScreen = "/LegacyScreen";
   static const String addLegacyMessageScreen = "/AddLegacyMessageScreen";
@@ -42,7 +41,7 @@ class AppRoutes {
         GetPage(name: customNavBar, page: () => const CustomNavBar()),
         GetPage(name: notificationScreen, page: () =>  NotificationScreen()),
         GetPage(name: selectAgeScreen, page: () =>  SelectAgeScreen()),
-        GetPage(name: othersInfoScreen, page: () =>  OthersInfoScreen()),
+
         GetPage(name: journalScreen, page: () =>  JournalScreen()),
         GetPage(name: legacyScreen, page: () =>  LegacyScreen()),
         GetPage(name: addLegacyMessageScreen, page: () =>  AddLegacyMessageScreen()),

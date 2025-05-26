@@ -56,7 +56,7 @@ class _SettingScreenState extends State<SettingScreen> {
               icon: Image.asset(AppIcons.privacy, height: 18.h),
               label: 'Privacy Policy',
               onTap: () {
-                Get.to(() => AppData(type: "privacy-policy"));
+                Get.to(() => AppData(type: "privacy"));
               },
             ),
             buildOption(

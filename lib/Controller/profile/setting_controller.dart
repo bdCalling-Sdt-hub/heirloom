@@ -19,9 +19,9 @@ class SettingController extends GetxController {
       final response = await ApiClient.getData(Urls.appData(type));
       if (response.statusCode == 200) {
 
-        appContent.value = response.body['data']['content'] ?? '';
+        appContent.value = response.body['data']['description'] ?? '';
       } else {
-        Get.snackbar("Error", response.body['message'] ?? "Failed to fetch App Data");
+        Get.snackbar("!!!", response.body['message'] ?? "Failed to fetch App Data");
       }
     } catch (e) {
       Get.snackbar("Error", "An unexpected error occurred: $e");
@@ -36,7 +36,7 @@ class SettingController extends GetxController {
     deleteLoading.value = true;
 
     var response = await ApiClient.deleteData(
-      Urls.deleteUser(userId),);
+      Urls.deleteUser(userId));
     if (response.statusCode == 200 || response.statusCode == 201) {
 
       PrefsHelper.remove(AppConstants.isLogged);

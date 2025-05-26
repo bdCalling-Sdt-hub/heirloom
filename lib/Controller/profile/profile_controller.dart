@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:get/get.dart';
 
 import '../../routes/app_routes.dart';
@@ -9,13 +11,17 @@ class ProfileController extends GetxController{
   var savedMoney = ''.obs;
   var isLoading = true.obs;
   var fullName = ''.obs;
+  var userName = ''.obs;
+  var address = ''.obs;
   var email = ''.obs;
-  var activities = <Map<String, dynamic>>[].obs;
+  var ageRange = ''.obs;
+  var profileImageUrl = ''.obs;
+  var mood = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
     fetchProfileData();
-    fetchActivityDetails();
   }
 
 
@@ -24,13 +30,17 @@ class ProfileController extends GetxController{
     try {
       isLoading(true);
       final response = await ApiClient.getData(Urls.getProfile);
-
       if (response.statusCode == 200) {
         final data = response.body['data'];
-        fullName.value = data['fullName'] ?? '';
+        fullName.value = data['name'] ?? '';
+        userName.value = data['username'] ?? '';
+        address.value = data['address'] ?? '';
+        ageRange.value = data['ageRange'] ?? '';
         email.value = data['email'] ?? '';
+        mood.value = data['user_mood'] ?? '';
+        profileImageUrl.value = data['image'] ?? '';
       } else {
-       // Get.snackbar('!!!!', response.body['message'] ?? 'Failed to load profile data');
+        Get.snackbar('!!!', response.body['message'] ?? 'Failed to load profile data');
       }
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong: $e');
@@ -39,42 +49,65 @@ class ProfileController extends GetxController{
     }
   }
 
-  Future<void> updateProfileData(String updatedName) async {
+  RxBool updateProfileLoading = false.obs;
+  Future<void> updateProfileData({
+    String? updatedName,
+    String? updatedAddress,
+    String? updatedAgeRange,
+    String? updatedUserMood,
+    bool? fromSelectAge,
+    File? imageFile,  // optional image file
+  }) async {
     try {
-      isLoading(true);
-      final response = await ApiClient.patch(Urls.updateProfile, {'fullName': updatedName});
+      updateProfileLoading(true);
 
-      if (response.statusCode == 200) {
-        fullName.value = updatedName;
-        Get.snackbar('Success', 'Profile updated successfully');
-        Get.offAllNamed(AppRoutes.customNavBar);
+      // Build the fields map - only include non-null and non-empty strings
+      Map<String, String> fields = {};
+      if (updatedName != null && updatedName.trim().isNotEmpty) {
+        fields['name'] = updatedName.trim();
+      }
+      if (updatedAddress != null && updatedAddress.trim().isNotEmpty) {
+        fields['address'] = updatedAddress.trim();
+      }
+      if (updatedAgeRange != null && updatedAgeRange.trim().isNotEmpty) {
+        fields['ageRange'] = updatedAgeRange.trim();
+      }
+      if (updatedUserMood != null && updatedUserMood.trim().isNotEmpty) {
+        fields['user_mood'] = updatedUserMood.trim();
+      }
+
+      // Prepare multipart body for image if provided
+      List<MultipartBody>? multipartBody;
+      if (imageFile != null) {
+        multipartBody = [
+          MultipartBody('image', imageFile),
+        ];
+      }
+
+      // Call your patchMultipartData from ApiClient
+      final response = await ApiClient.patchMultipartData(
+        Urls.updateProfile,
+        fields,
+        multipartBody: multipartBody,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Optionally update local state
+        if (updatedName != null && updatedName.isNotEmpty) {
+          fullName.value = updatedName;
+        }
+        Get.snackbar('Success', response.body['message']);
+
+        Get.offAllNamed(fromSelectAge==true?AppRoutes.signInScreen:AppRoutes.customNavBar);
       } else {
-        Get.snackbar('!!!!', response.body['message'] ?? 'Failed to update profile');
+        Get.snackbar('!!!', response.body['message'] ?? 'Failed to update profile');
       }
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong: $e');
     } finally {
-      isLoading(false);
+      updateProfileLoading(false);
     }
   }
 
 
-  // New method to fetch activity details
-  void fetchActivityDetails() async {
-    try {
-      isLoading(true);
-      final response = await ApiClient.getData(Urls.getActivityDetails);
-
-      if (response.statusCode == 200) {
-        var data = response.body['data'] as List;
-        activities.value = data.map((activity) => activity as Map<String, dynamic>).toList();
-      } else {
-        // Handle error
-      }
-    } catch (e) {
-      // Handle error
-    } finally {
-      isLoading(false);
-    }
-  }
 }

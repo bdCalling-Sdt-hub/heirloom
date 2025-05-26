@@ -7,7 +7,6 @@ export '../views/auth/sign_up_screen.dart';
 export '../views/bottom navigation bar/custom_nav_bar.dart';
 export '../views/splash screen/splash_screen.dart';
 export 'package:get/get.dart';
-export '../views/auth/others_info_screen.dart';
 export '../views/auth/password_changed_ui.dart';
 export '../views/auth/select_age_screen.dart';
 export '../views/home/notification/notification.dart';

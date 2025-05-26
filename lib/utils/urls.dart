@@ -1,36 +1,36 @@
 class Urls {
 
   // Auth Endpoints
-  static const String signUp = '/v1/auth/register';
+  static const String signUp = '/auth/register';
 
-  static const String login = '/v1/auth/login';
+  static const String login = '/auth/login';
 
-  static const String forgetPass = '/v1/auth/forgot-password';
-  static const String changePass = '/v1/auth/change-password';
+  static const String forgetPass = '/auth/forget-password';
+  static const String changePass = '/auth/change-password';
 
-  static const String otpVerify = '/v1/auth/verify-email';
+  static const String otpVerify = '/auth/verify-otp';
   static  String forgetOtpVerify(String email) =>'/user/verify-forget-otp?email=$email';
-  static const String otpResend= '/v1/auth/resend-otp';
+  static  String otpResend(String email) => '/auth/resend-otp?email=$email';
 
   static String updateUser(String userId) => '/users/$userId';
 
-  static String deleteUser(String userId) => '/v1/users/$userId';
+  static String deleteUser(String userId) => '/auth/account-delete?id=$userId';
 
-  static const String resetPass= '/v1/auth/reset-password';
+  static const String resetPass= '/auth/reset-password';
 
 
  //App data
-  static const String privacy = '/privacy';
-  static const String terms = '/terms';
-  static const String about = '/about';
-  static  String appData(String type) => '/v1/$type/';
+ //  static const String privacy = '/privacy';
+ //  static const String terms = '/terms';
+ //  static const String about = '/about';
+  static  String appData(String type) => '/$type';
 
 
 
 
 //common
-  static const String getProfile = '/v1/users';
-  static const String updateProfile = '/v1/users';
+  static const String getProfile = '/auth/my-profile';
+  static const String updateProfile = '/auth/profile-update';
   static const String getActivityDetails = '/v1/deals/redeem-history';
 
 

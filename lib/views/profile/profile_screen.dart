@@ -1,14 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heirloom/utils/app_images.dart';
 import 'package:heirloom/views/profile/profile_update.dart';
-import 'package:heirloom/views/profile/support_screen.dart';
 
+import '../../Controller/profile/profile_controller.dart';
 import '../../global_widgets/custom_text.dart';
 import '../../global_widgets/dialog.dart';
 import '../../helpers/prefs_helper.dart';
 import '../../routes/app_routes.dart';
+import '../../services/api_constants.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_constant.dart';
 import '../../utils/app_icons.dart';
@@ -20,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sizeH = MediaQuery.sizeOf(context).height;
-
+    final ProfileController profileController = Get.put(ProfileController());
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -31,46 +33,37 @@ class ProfileScreen extends StatelessWidget {
             // Profile picture
 
             // Show profile picture or a default image
-            //String profileImage ="${ApiConstants.imageBaseUrl}/${controller.profile['profilePicture'] }"?? AppImages.model;
-            Container(
-              width: 100.r,
-              height: 100.r,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    blurRadius: 10.r,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-                border: Border.all(
-                  color: AppColors.primaryColor
-                      .withOpacity(0.5), // Outer blue border
-                  width: 2.w,
-                ),
-              ),
-              child: CircleAvatar(
-                radius: 50.r,
-                backgroundColor: Colors.grey[300],
-                backgroundImage: NetworkImage(AppImages.model), // Load image from network
-              ),
-            ),
 
-            Padding(
+       Obx((){return    CircleAvatar(
+         radius: 45.r,  // half of 90
+         backgroundImage: profileController.profileImageUrl.value.isNotEmpty
+             ? CachedNetworkImageProvider(
+           ApiConstants.imageBaseUrl + profileController.profileImageUrl.value,
+         )
+             : AssetImage(AppImages.model) as ImageProvider,
+         backgroundColor: Colors.grey.shade200,
+       );}),
+
+          Obx((){
+            return Padding(
               padding: EdgeInsets.symmetric(horizontal: 25.w),
               child: CustomTextOne(
-                text: "Akik",
+                text: profileController.userName.value,
                 maxLine: 1,
                 textOverflow: TextOverflow.ellipsis,
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.w),
-              child: CustomTextTwo(
-                text: "Akik@gmail.com",
-              ),
-            ),
+            );
+          }),
+
+            Obx((){
+
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.w),
+                child: CustomTextTwo(
+                  text: profileController.email.value,
+                ),
+              );
+            }),
 
             const Divider(
               thickness: 1,
@@ -166,8 +159,6 @@ Get.toNamed(AppRoutes.journalScreen);
     required Widget icon,
     required String label,
     required VoidCallback onTap,
-    Color iconColor = Colors.white,
-    Color labelColor = Colors.white,
     Color? fillColor,
     Color borderColor = AppColors.cardColor,
     final bool? isTrue,

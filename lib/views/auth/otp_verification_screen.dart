@@ -60,7 +60,7 @@ class OtpVerificationScreen extends StatelessWidget {
                           text: "Resend",
                           textDecoration: TextDecoration.underline,
                           onTap: () {
-                           // controller.reSendOtp(email!);
+                           controller.reSendOtp(email!);
                           }),
                     ],
                   ),
@@ -68,20 +68,13 @@ class OtpVerificationScreen extends StatelessWidget {
                     height: sizeH * .03,
                   ),
                  Obx(() =>  CustomTextButton(
-                     text: controller.verifyLoading.value
-                         ? "Verifying...."
-                         : "Verify",
+                     text:"Verify",
+                     isLoading: controller.verifyLoading.value,
                      onTap: () {
                        print("==================================${otpTEController.text}");
 
-                       if(isFormForget==true){
-                         Get.toNamed(AppRoutes.resetPassScreen);
-                       }
-                       else{
-                         // controller.verifyEmail(
-                         //     otpTEController.text, isFormForget!);
-                         Get.toNamed(AppRoutes.selectAgeScreen);
-                       }
+                         controller.verifyOtp(
+                             otpTEController.text, isFormForget!);
                      }),)
                 ],
               ),

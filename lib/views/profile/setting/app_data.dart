@@ -21,7 +21,7 @@ class AppData extends StatelessWidget {
     settingController.fetchAppData(type);
     String getAppTitle(String type) {
       switch (type) {
-        case "privacy-policy":
+        case "privacy":
           return "Privacy Policy";
         case "terms":
           return "Terms & Conditions";

@@ -4,7 +4,7 @@ import 'package:heirloom/global_widgets/custom_text.dart'; // Assuming you have 
 import 'package:heirloom/global_widgets/custom_text_button.dart';
 import 'package:heirloom/utils/app_colors.dart'; // Custom colors
 import 'package:intl/intl.dart';
-
+import 'package:get/get.dart';
 import '../../../global_widgets/custom_text_field.dart'; // For date formatting
 
 class JournalAddScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _JournalAddScreenState extends State<JournalAddScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   DateTime? _deliveryDate;
-
+  bool switchValue = false;
   // Method to pick the date
   Future<void> _selectDate(BuildContext context) async {
     DateTime initialDate = DateTime.now();
@@ -102,7 +102,25 @@ class _JournalAddScreenState extends State<JournalAddScreen> {
                 hintText: 'Type your journal message...',
                 maxLine: 5,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomTextTwo(text: "Enhance With Ai"),
+                  SizedBox(
+                      width: 80.w,
+                      child: CustomTextButton(
+                        text: "✨Enhance",
+                        onTap: () {
 
+                        },
+                        fontSize: 12.sp,
+                        padding: 0,
+                        radius: 8,
+
+                        color: AppColors.settingCardColor,
+                      )),
+                ],
+              ),
               SizedBox(
                 height: 20.h,
               ),
@@ -114,6 +132,7 @@ class _JournalAddScreenState extends State<JournalAddScreen> {
       ),
     );
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -121,6 +140,5 @@ class _JournalAddScreenState extends State<JournalAddScreen> {
     _messageController.dispose();
     _dateController.dispose();
     _titleController.dispose();
-
   }
 }

@@ -1,7 +1,6 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../Controller/auth/auth_controller.dart';
@@ -9,16 +8,24 @@ import '../../global_widgets/app_logo.dart';
 import '../../global_widgets/custom_text.dart';
 import '../../global_widgets/custom_text_button.dart';
 import '../../global_widgets/custom_text_field.dart';
-import '../../routes/app_routes.dart';
-import '../../utils/app_colors.dart';
 import '../../utils/app_icons.dart';
 
-class ResetPassScreen extends StatelessWidget {
+class ResetPassScreen extends StatefulWidget {
   ResetPassScreen({super.key});
+
+  @override
+  State<ResetPassScreen> createState() => _ResetPassScreenState();
+}
+
+class _ResetPassScreenState extends State<ResetPassScreen> {
   final TextEditingController passTEController = TextEditingController();
+
   final TextEditingController confirmPassTEController = TextEditingController();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   final AuthController controller = Get.put(AuthController());
+
   @override
   Widget build(BuildContext context) {
     final sizeH = MediaQuery.of(context).size.height;
@@ -90,8 +97,7 @@ class ResetPassScreen extends StatelessWidget {
                           text:controller.setPasswordLoading.value?"Resetting...": "Reset Password",
                           onTap: () {
                             if (formKey.currentState?.validate() ?? false) {
-                             // controller.resetPassword(rePassTEController.text);
-                              Get.toNamed(AppRoutes.passwordChangedUi);
+                             controller.resetPassword(confirmPassTEController.text);
                             }
                           }),)
                     ],
@@ -101,5 +107,12 @@ class ResetPassScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    passTEController.dispose();
+    confirmPassTEController.dispose();
   }
 }
