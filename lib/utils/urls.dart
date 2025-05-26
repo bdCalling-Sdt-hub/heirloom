@@ -19,10 +19,7 @@ class Urls {
   static const String resetPass= '/auth/reset-password';
 
 
- //App data
- //  static const String privacy = '/privacy';
- //  static const String terms = '/terms';
- //  static const String about = '/about';
+//privacy,about,terms
   static  String appData(String type) => '/$type';
 
 
@@ -31,32 +28,18 @@ class Urls {
 //common
   static const String getProfile = '/auth/my-profile';
   static const String updateProfile = '/auth/profile-update';
-  static const String getActivityDetails = '/v1/deals/redeem-history';
 
+//notification
 
   static const String notification = '/notification';
   static const String notificationBadge = '/notification/badge-count';
-  static const String payments = '/purchase';
 
-//home
-  static const String getHomeDeals = '/v1/deals/homepage-deals';
-  static const String exploreHomeDeals = '/v1/category/all';
-  static  String productDetails(String productId) => '/v1/deals/get-deals/$productId';
-  static  String toggleFavorite(String productId) => '/v1/deals/favourite/$productId';
-  static  String redeemDeal(String productId) => '/v1/deals/redeem/$productId';
-  static  String staffConfirm(String productId) => '/v1/deals/staff-member-confirm/$productId';
-  static  String dealsByCategory(String categoryId) => '/v1/deals/category/$categoryId';
 
-//favourite
-  static const String getFavouriteDeals = '/v1/deals/user/favourites';
-
-  //explore
-  static const String exploreTrendingPlaces = '/v1/trending-places/getAll';
-
-  //profile
-  static const String savedMoney = '/v1/users/total-save';
-
-  //coupon
-  static const String getAllCoupons = '/v1/users/coupon/getAll';
+//journal
+  static const String getJournal = '/journals/get';
+  static const String addJournal = '/journals/add';
+  static const String enhanceJournal = '/ai/enhance';
+  static String deleteJournal(String journalId) => '/journals/delete/$journalId';
+  static String updateJournal(String journalId) => '/journals/edit/$journalId';
 
 }

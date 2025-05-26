@@ -18,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   ProfileController profileController =ProfileController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -171,16 +172,19 @@ class _HomeScreenState extends State<HomeScreen> {
           border: Border.fromBorderSide(BorderSide(color: AppColors.cardColor)),
         ),
         child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                icon,
-                height: sizeH * .05,
-              ),
-              SizedBox(width: 10.w,),
-              CustomTextOne(text: text),
-            ],
+          child: Padding(
+            padding:  EdgeInsets.symmetric(horizontal: 20.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  icon,
+                  height: sizeH * .05,
+                ),
+                SizedBox(width: 10.w,),
+                CustomTextOne(text: text),
+              ],
+            ),
           ),
         ),
       ),
