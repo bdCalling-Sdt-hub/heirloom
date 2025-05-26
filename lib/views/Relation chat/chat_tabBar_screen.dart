@@ -14,9 +14,9 @@ class ChatTabBarScreen extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+
         body: Column(
           children: [
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
               child: TabBar(
@@ -24,7 +24,7 @@ class ChatTabBarScreen extends StatelessWidget {
                 unselectedLabelColor: AppColors.textColor,
                 dividerColor: AppColors.dividerColor,
                 indicatorColor: AppColors.dividerColor,
-            indicatorSize: TabBarIndicatorSize.tab,
+                indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 5,
                 indicatorAnimation: TabIndicatorAnimation.linear,
                 tabs: [
