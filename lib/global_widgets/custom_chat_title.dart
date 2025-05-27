@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:heirloom/services/api_constants.dart';
 
 import '../utils/app_colors.dart';
 import 'custom_text.dart';
@@ -7,12 +8,17 @@ import 'custom_text.dart';
 class CustomChatTile extends StatelessWidget {
   final String title, subTitle, img;
   final Widget time;
+  final String? heroTag;
+  final String? heroTagName;
+
   const CustomChatTile({
     super.key,
     required this.title,
     required this.subTitle,
     required this.img,
     required this.time,
+    this.heroTag,
+    this.heroTagName,
   });
 
   @override
@@ -36,21 +42,31 @@ class CustomChatTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 20.r,
-              backgroundColor: AppColors.primaryColor,
-              backgroundImage: NetworkImage(img),
+            Hero(
+              tag: heroTag ?? img,
+              child: CircleAvatar(
+                radius: 20.r,
+                backgroundColor: AppColors.primaryColor,
+                backgroundImage: NetworkImage(ApiConstants.imageBaseUrl + img),
+              ),
             ),
             SizedBox(width: 15.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextOne(
-                    text: title,
-                    fontSize: 14.sp,
-                    maxLine: 1,
-                    textOverflow: TextOverflow.ellipsis,
+                  Hero(
+                    tag: heroTagName ?? title,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: CustomTextOne(
+                        key: ValueKey(heroTagName ?? title),
+                        text: title,
+                        fontSize: 14.sp,
+                        maxLine: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
                   CustomTextOne(
                     text: subTitle,
@@ -64,10 +80,12 @@ class CustomChatTile extends StatelessWidget {
               ),
             ),
 
-          time,
+            time,
           ],
         ),
       ),
     );
   }
 }
+
+

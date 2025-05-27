@@ -4,9 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
 import 'package:heirloom/routes/app_routes.dart';
+import 'package:heirloom/services/api_constants.dart';
 import 'package:heirloom/utils/app_images.dart';
 import 'package:heirloom/views/Relation%20chat/chat/profile_about_screen.dart';
+import 'package:shimmer/shimmer.dart';
 
+import '../../../Controller/relation chat/chat_controller.dart';
 import '../../../global_widgets/custom_text_field.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_icons.dart';
@@ -19,32 +22,68 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  late final String conversationId;
+  late final String name;
+  late final String image;
+  late final String activeStatus;
+  late final String heroTag;
+  late final String heroTagName;
+
+  late final MessagesController messagesController;
+
+  final ScrollController _scrollController = ScrollController();
+
   final TextEditingController _controller = TextEditingController();
-  List<Map<String, String>> messages = [
-    {
-      'sender': 'ai',
-      'message': 'Hey Jamil, you are back! I am excited to learn more about you.'
-    },
-    {'sender': 'user', 'message': 'What would you like to do next?'},
-    {'sender': 'ai', 'message': 'Share a memory on a topic that I pick.'},
-    {
-      'sender': 'user',
-      'message': 'Sure! What\'s the category of the memory you want to share?'
-    },
-    {'sender': 'ai', 'message': 'Childhood.'},
-    {
-      'sender': 'user',
-      'message': 'Got it. You can type a message and tell me something about your childhood.'
-    },
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    final args = Get.arguments ?? {};
+    conversationId = args['conversationId'] ?? '';
+    name = args['name'] ?? 'Unknown';
+    image = args['image'] ?? AppImages.model;
+    activeStatus = args['activeStatus'] ?? 'Active now';
+    heroTag = args['heroTag'] ?? image;
+    heroTagName = args['heroTagName'] ?? name;
+
+    messagesController = Get.put(MessagesController(conversationId));
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 150 &&
+          !messagesController.isLoadingMore.value &&
+          !messagesController.isLoading.value) {
+        messagesController.loadMore();
+      }
+    });
+  }
 
   void _sendMessage() {
     if (_controller.text.isNotEmpty) {
       setState(() {
-        messages.add({'sender': 'user', 'message': _controller.text});
+        // Optionally, you can send to backend here
+        messagesController.messages.insert(
+          0,
+          Message(
+            senderName: name,
+            senderId: conversationId,
+            activeStatus: true,
+            content: _controller.text,
+            image: '',
+            readBy: false,
+            time: DateTime.now(),
+          ),
+        );
         _controller.clear();
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -53,25 +92,41 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: InkWell(
-          onTap: (){
-            Get.to(ProfileAboutScreen(image: AppImages.model, name: "Akik",useName: "@akik404", conversationId: ""));
+          onTap: () {
+            Get.to(ProfileAboutScreen(
+              image:ApiConstants.imageBaseUrl+image,
+              name: name,
+              useName: '@${name.replaceAll(' ', '').toLowerCase()}',
+              conversationId: conversationId,
+            ));
           },
           child: Row(
             children: [
-
-              CircleAvatar(
-                radius: 20.r,
-                backgroundColor: AppColors.primaryColor,
-                backgroundImage: NetworkImage(AppImages.model),
+              Hero(
+                tag: heroTag,
+                child: CircleAvatar(
+                  radius: 20.r,
+                  backgroundColor: AppColors.primaryColor,
+                  backgroundImage: NetworkImage(ApiConstants.imageBaseUrl + image),
+                ),
               ),
-              SizedBox(width: 10.w,),
+              SizedBox(width: 10.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomTextOne(text: "Akik"),
-                  CustomTextTwo(text: "Active 2 hours ago")
+                  Hero(
+                    tag: heroTagName,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: CustomTextOne(
+                        key: ValueKey(heroTagName),
+                        text: name,
+                      ),
+                    ),
+                  ),
+                  CustomTextTwo(text: activeStatus),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -81,45 +136,83 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  final message = messages[index];
-                  bool isUser = message['sender'] == 'user';
+              child: Obx(() {
+                if (messagesController.isLoading.value) {
+                  return ListView.builder(
+                    itemCount: 6,
+                    itemBuilder: (context, index) => Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 40.r,
+                              height: 40.r,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            SizedBox(width: 15.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(height: 14.h, color: Colors.white, margin: EdgeInsets.symmetric(vertical: 4.h)),
+                                  Container(height: 14.h, width: 150.w, color: Colors.white),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
 
-                  // Conditionally render the BubbleSpecialThree with tail or not
-                  if (isUser) {
+                if (messagesController.messages.isEmpty) {
+                  return const Center(child: CustomTextOne(text: "No messages found"));
+                }
+
+                return ListView.separated(
+                  controller: _scrollController,
+                  reverse: true, // latest messages at bottom
+                  itemCount: messagesController.messages.length + (messagesController.isLoadingMore.value ? 1 : 0),
+                  separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                  itemBuilder: (context, index) {
+                    if (index == messagesController.messages.length) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+
+                    final message = messagesController.messages[index];
+                    final isUser = message.senderId == conversationId;
+
                     return Align(
-                      alignment: Alignment.centerRight,
-                      child: BubbleSpecialThree(
-                        text: message['message']!,
-                        color: AppColors.secondaryColor,
-                        tail: true,
-                        isSender: true,
-                        textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.sp,
+                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: 280.w),
+                        padding: EdgeInsets.all(12.w),
+                        decoration: BoxDecoration(
+                          color: isUser ? AppColors.secondaryColor : Colors.grey,
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        child: Text(
+                          message.content,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                          ),
                         ),
                       ),
                     );
-                  } else {
-                    return Align(
-
-                      alignment: Alignment.centerLeft,
-                      child: BubbleSpecialThree(
-                        text: message['message']!,
-                        color: Colors.grey,
-                        tail: true,
-                        isSender: false,
-                        textStyle: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.sp,
-                        ),
-                      ),
-                    );
-                  }
-                },
-              ),
+                  },
+                );
+              }),
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.h),
@@ -136,9 +229,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: CustomTextField(
                       controller: _controller,
-                      validator: (value) {
-                        return null;
-                      },
+                      validator: (value) => null,
                       hintText: 'Type your message',
                       borderRadio: 16.r,
                     ),
@@ -160,3 +251,4 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
+

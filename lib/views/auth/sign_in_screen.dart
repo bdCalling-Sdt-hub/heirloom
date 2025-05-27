@@ -82,10 +82,10 @@ class SignInScreen extends StatelessWidget {
                           if (value.length < 8) {
                             return "Password must be at least 8 characters and include uppercase, lowercase, numbers, and special characters (e.g., Abc123@!)";
                           }
-                          if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
-                              .hasMatch(value)) {
-                            return "Password must contain letters, numbers, uppercase, and special characters";
-                          }
+                          // if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$')
+                          //     .hasMatch(value)) {
+                          //   return "Password must contain letters, numbers, uppercase, and special characters";
+                          // }
                           return null;
                         },
                         prefixIcon: Padding(

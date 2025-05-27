@@ -42,4 +42,9 @@ class Urls {
   static String deleteJournal(String journalId) => '/journals/delete/$journalId';
   static String updateJournal(String journalId) => '/journals/edit/$journalId';
 
+
+  //relation chat
+  static  String getConversationList (String limit,page) =>  '/message/get/conversations?limit=$limit&page=$page';
+  static  String getMessages (String conversationId,limit,page) =>  '/message/$conversationId';
+
 }
