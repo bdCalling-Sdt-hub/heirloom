@@ -9,7 +9,9 @@ class InboxController extends GetxController {
 
   int currentPage = 1;
   int totalPages = 1;
-  final int limit = 10; // items per page
+  final int limit = 10;
+
+  String searchQuery = '';
 
   @override
   void onInit() {
@@ -17,8 +19,13 @@ class InboxController extends GetxController {
     super.onInit();
   }
 
-  Future<void> fetchConversations({required int page}) async {
-    if (page > totalPages) return; // no more pages
+  Future<void> fetchConversations({required int page, String search = ''}) async {
+    if (page > totalPages) return;
+
+    if (page == 1) {
+      conversations.clear();
+      searchQuery = search;
+    }
 
     try {
       if (page == 1) {
@@ -27,21 +34,26 @@ class InboxController extends GetxController {
         isLoadingMore.value = true;
       }
 
-      final response = await ApiClient.getData(
-        Urls.getConversationList(limit.toString(), page)
-      );
+      // Use search or no search
+      final uri = search.isEmpty
+          ? Urls.getConversationList(limit.toString(), page)
+          : Urls.getConversationListSearch(search);
+
+      final response = await ApiClient.getData(uri);
 
       if (response.statusCode == 200) {
         final data = response.body['data'];
         final convList = data['conversations'] as List<dynamic>;
         totalPages = data['pagination']['totalPages'] ?? 1;
 
+        final newConversations = convList.map((json) => Conversation.fromJson(json)).toList();
+
         if (page == 1) {
-          conversations.value = convList.map((json) => Conversation.fromJson(json)).toList();
+          conversations.value = newConversations;
         } else {
-          // Append new data
-          conversations.addAll(convList.map((json) => Conversation.fromJson(json)));
+          conversations.addAll(newConversations);
         }
+
         currentPage = page;
       } else {
         if (page == 1) conversations.clear();
@@ -56,43 +68,55 @@ class InboxController extends GetxController {
 
   Future<void> loadMore() async {
     if (!isLoadingMore.value && currentPage < totalPages) {
-      await fetchConversations(page: currentPage + 1);
+      await fetchConversations(page: currentPage + 1, search: searchQuery);
     }
   }
+
+  // Call this method to update search results from UI
+  void searchConversations(String search) {
+    currentPage = 1;
+    totalPages = 1;
+    fetchConversations(page: 1, search: search);
+  }
 }
+
 
 class Conversation {
   final String id;
   final String lastMessage;
   final String name;
+  final String userName;
   final String image;
   final String senderId;
   final DateTime time;
-  final String activeStatus;  // new
+  final bool activeStatus;  // changed to bool
 
   Conversation({
     required this.id,
     required this.lastMessage,
     required this.name,
+    required this.userName,
     required this.image,
     required this.senderId,
     required this.time,
-    this.activeStatus = 'Active now',  // default fallback
+    this.activeStatus = false,
   });
 
-  factory Conversation.fromJson(Map<String, dynamic> json) {
-    // You may want to compute activeStatus here based on last seen/time fields
-    String active = 'Active now'; // or from json['activeStatus'] if exists
+  // Friendly text based on activeStatus bool
+  String get activeStatusText => activeStatus ? 'Active now' : 'Offline';
 
+  factory Conversation.fromJson(Map<String, dynamic> json) {
     return Conversation(
       id: json['_id'] ?? '',
       lastMessage: json['lastMessage'] ?? '',
       name: json['name'] ?? '',
+      userName: json['userName'] ?? '',
       image: json['image'] ?? '',
       senderId: json['sender_id'] ?? '',
       time: DateTime.tryParse(json['time'] ?? '') ?? DateTime.now(),
-      activeStatus: active,
+      activeStatus: json['activeStatus'] ?? false,
     );
   }
 }
+
 

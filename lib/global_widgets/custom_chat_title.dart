@@ -47,7 +47,7 @@ class CustomChatTile extends StatelessWidget {
               child: CircleAvatar(
                 radius: 20.r,
                 backgroundColor: AppColors.primaryColor,
-                backgroundImage: NetworkImage(ApiConstants.imageBaseUrl + img),
+                backgroundImage: NetworkImage(img),
               ),
             ),
             SizedBox(width: 15.w),

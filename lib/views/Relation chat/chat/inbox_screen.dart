@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
+import 'package:heirloom/services/api_constants.dart';
 import 'package:heirloom/utils/app_constant.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -22,7 +23,7 @@ class InboxScreen extends StatefulWidget {
 
 class _InboxScreenState extends State<InboxScreen> {
   final TextEditingController searchTEController = TextEditingController();
-  final InboxController chatController = Get.put(InboxController());
+  final InboxController inboxController = Get.put(InboxController());
   final ScrollController _scrollController = ScrollController();
   String? userId;
    getUserId() async{
@@ -35,10 +36,16 @@ class _InboxScreenState extends State<InboxScreen> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 150 &&
-          !chatController.isLoadingMore.value &&
-          !chatController.isLoading.value) {
-        chatController.loadMore();
+          !inboxController.isLoadingMore.value &&
+          !inboxController.isLoading.value) {
+        inboxController.loadMore();
       }
+    });
+
+    // Listen to search input changes
+    searchTEController.addListener(() {
+      final searchText = searchTEController.text.trim();
+      inboxController.searchConversations(searchText);
     });
   }
 
@@ -66,11 +73,14 @@ class _InboxScreenState extends State<InboxScreen> {
                   color: Colors.white,
                 ),
               ),
+              validator: (value){
+                return null;
+              },
             ),
             SizedBox(height: 10.h),
             Expanded(
               child: Obx(() {
-                if (chatController.isLoading.value) {
+                if (inboxController.isLoading.value) {
                   // Show shimmer loading
                   return ListView.builder(
                     itemCount: 6,
@@ -107,20 +117,20 @@ class _InboxScreenState extends State<InboxScreen> {
                   );
                 }
 
-                if (chatController.conversations.isEmpty) {
+                if (inboxController.conversations.isEmpty) {
                   return const Center(child: CustomTextOne(text: "No conversations found"));
                 }
 
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await chatController.fetchConversations(page: 1,);
+                    await inboxController.fetchConversations(page: 1,);
                   },
                   child: ListView.separated(
                     controller: _scrollController,
-                    itemCount: chatController.conversations.length + (chatController.isLoadingMore.value ? 1 : 0),
+                    itemCount: inboxController.conversations.length + (inboxController.isLoadingMore.value ? 1 : 0),
                     separatorBuilder: (context, index) => Divider(color: Colors.transparent),
                     itemBuilder: (context, index) {
-                      if (index == chatController.conversations.length) {
+                      if (index == inboxController.conversations.length) {
                         // Show loading indicator at bottom when loading more
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.h),
@@ -128,15 +138,17 @@ class _InboxScreenState extends State<InboxScreen> {
                         );
                       }
 
-                      final conv = chatController.conversations[index];
+                      final conv = inboxController.conversations[index];
 
 
                       return InkWell(
                         onTap: () {
+                          print("==============================${conv.userName}");
                           Get.toNamed(AppRoutes.chatScreen, arguments: {
                             'conversationId': conv.id,
                             'name': conv.name,
-                            'image': conv.image,
+                            'userName': conv.userName,
+                            'image': conv.image.isEmpty ? AppImages.model :ApiConstants.imageBaseUrl+conv.image,
                             'activeStatus': conv.activeStatus,
                             'heroTag': "avatar_${conv.id}",
                             'heroTagName': "title_${conv.name}",
@@ -145,7 +157,7 @@ class _InboxScreenState extends State<InboxScreen> {
                         child: CustomChatTile(
                           title: conv.name.isEmpty ? "Unknown" : conv.name,
                           subTitle: conv.lastMessage.isEmpty ? "No message yet." : conv.lastMessage,
-                          img: conv.image.isEmpty ? AppImages.model : conv.image,
+                          img: conv.image.isEmpty ? AppImages.model :ApiConstants.imageBaseUrl+conv.image,
                           time: Text(
                             _formatTime(conv.time),
                             style: TextStyle(color: AppColors.textColor.withOpacity(0.5), fontSize: 12.sp),

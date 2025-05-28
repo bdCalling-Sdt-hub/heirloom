@@ -1,16 +1,21 @@
+import 'dart:io';
+
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
-import 'package:heirloom/routes/app_routes.dart';
 import 'package:heirloom/services/api_constants.dart';
+import 'package:heirloom/utils/app_constant.dart';
 import 'package:heirloom/utils/app_images.dart';
 import 'package:heirloom/views/Relation%20chat/chat/profile_about_screen.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../Controller/relation chat/chat_controller.dart';
 import '../../../global_widgets/custom_text_field.dart';
+import '../../../helpers/prefs_helper.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_icons.dart';
 
@@ -24,59 +29,95 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   late final String conversationId;
   late final String name;
+  late final String userName;
   late final String image;
-  late final String activeStatus;
+  late final bool activeStatus;
   late final String heroTag;
   late final String heroTagName;
 
-  late final MessagesController messagesController;
+  late final ChatController messagesController;
 
   final ScrollController _scrollController = ScrollController();
 
   final TextEditingController _controller = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
 
+String? userId;
+  void getId () async{
+    userId=await PrefsHelper.getString(AppConstants.userId);
+
+  }
   @override
   void initState() {
     super.initState();
+    getId();
     final args = Get.arguments ?? {};
     conversationId = args['conversationId'] ?? '';
     name = args['name'] ?? 'Unknown';
+    userName = args['userName'] ?? 'Unknown';
     image = args['image'] ?? AppImages.model;
-    activeStatus = args['activeStatus'] ?? 'Active now';
+    activeStatus = args['activeStatus'] ?? false;
     heroTag = args['heroTag'] ?? image;
     heroTagName = args['heroTagName'] ?? name;
-
-    messagesController = Get.put(MessagesController(conversationId));
-
+    messagesController = Get.put(ChatController(conversationId));
+    print("==========================id ===============$userId");
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 150 &&
+
+      if (_scrollController.position.pixels <=
+          _scrollController.position.minScrollExtent + 150 &&
           !messagesController.isLoadingMore.value &&
           !messagesController.isLoading.value) {
         messagesController.loadMore();
       }
     });
+
+
+  }
+  String formatDateLabel(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final msgDate = DateTime(date.year, date.month, date.day);
+    final difference = today.difference(msgDate).inDays;
+
+    if (difference == 0) {
+      return "Today";
+    } else if (difference == 1) {
+      return "Yesterday";
+    } else {
+      return DateFormat.yMMMMd().format(date); // e.g., May 18, 2025
+    }
+  }
+  Map<String, List<Message>> groupMessagesByDate(List<Message> messages) {
+    messages.sort((a, b) => a.time.compareTo(b.time)); // sort ascending by time
+    final Map<String, List<Message>> grouped = {};
+    for (final msg in messages) {
+      final label = formatDateLabel(msg.time);
+      if (!grouped.containsKey(label)) {
+        grouped[label] = [];
+      }
+      grouped[label]!.add(msg);
+    }
+    return grouped;
   }
 
-  void _sendMessage() {
-    if (_controller.text.isNotEmpty) {
-      setState(() {
-        // Optionally, you can send to backend here
-        messagesController.messages.insert(
-          0,
-          Message(
-            senderName: name,
-            senderId: conversationId,
-            activeStatus: true,
-            content: _controller.text,
-            image: '',
-            readBy: false,
-            time: DateTime.now(),
-          ),
-        );
-        _controller.clear();
-      });
+
+  Future<void> _sendMessage() async {
+    print("==========================id ===============$userId");
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+    final success = await messagesController.sendMessage(text);
+    if (success) {
+      _controller.clear();
     }
+  }
+
+  Future<void> _pickAndSendImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
+
+    // final file = File(pickedFile.path);
+    // final success = await messagesController.sendImageMessage(file);
+    // if (!success) Get.snackbar('!!!', 'Failed to send image');
   }
 
   @override
@@ -94,9 +135,9 @@ class _ChatScreenState extends State<ChatScreen> {
         title: InkWell(
           onTap: () {
             Get.to(ProfileAboutScreen(
-              image:ApiConstants.imageBaseUrl+image,
+              image: image,
               name: name,
-              useName: '@${name.replaceAll(' ', '').toLowerCase()}',
+              useName: userName,
               conversationId: conversationId,
             ));
           },
@@ -107,7 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: CircleAvatar(
                   radius: 20.r,
                   backgroundColor: AppColors.primaryColor,
-                  backgroundImage: NetworkImage(ApiConstants.imageBaseUrl + image),
+                  backgroundImage: NetworkImage(image),
                 ),
               ),
               SizedBox(width: 10.w),
@@ -124,7 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     ),
                   ),
-                  CustomTextTwo(text: activeStatus),
+                  CustomTextTwo(text: activeStatus?"Active Now":"Not Active"),
                 ],
               ),
             ],
@@ -176,39 +217,85 @@ class _ChatScreenState extends State<ChatScreen> {
                   return const Center(child: CustomTextOne(text: "No messages found"));
                 }
 
-                return ListView.separated(
+                final groupedMessages = groupMessagesByDate(messagesController.messages);
+
+                final dateLabels = groupedMessages.keys.toList()
+                  ..sort((a, b) {
+                    DateTime parseLabel(String label) {
+                      if (label == "Today") return DateTime.now();
+                      if (label == "Yesterday") return DateTime.now().subtract(const Duration(days: 1));
+                      return DateFormat.yMMMMd().parse(label);
+                    }
+                    return parseLabel(b).compareTo(parseLabel(a));
+                  });
+
+                return ListView.builder(
+                  reverse: true,
                   controller: _scrollController,
-                  reverse: true, // latest messages at bottom
-                  itemCount: messagesController.messages.length + (messagesController.isLoadingMore.value ? 1 : 0),
-                  separatorBuilder: (_, __) => SizedBox(height: 10.h),
-                  itemBuilder: (context, index) {
-                    if (index == messagesController.messages.length) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.h),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
+                  itemCount: dateLabels.length,
+                  itemBuilder: (context, dateIndex) {
+                    final dateLabel = dateLabels[dateIndex];
+                    final msgs = groupedMessages[dateLabel]!;
+
+                    DateTime chipDate;
+                    final now = DateTime.now();
+                    if (dateLabel == 'Today') {
+                      chipDate = now;
+                    } else if (dateLabel == 'Yesterday') {
+                      chipDate = now.subtract(const Duration(days: 1));
+                    } else {
+                      chipDate = DateFormat.yMMMMd().parse(dateLabel);
                     }
 
-                    final message = messagesController.messages[index];
-                    final isUser = message.senderId == conversationId;
-
-                    return Align(
-                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        constraints: BoxConstraints(maxWidth: 280.w),
-                        padding: EdgeInsets.all(12.w),
-                        decoration: BoxDecoration(
-                          color: isUser ? AppColors.secondaryColor : Colors.grey,
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                        child: Text(
-                          message.content,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.sp,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.h),
+                          child: DateChip(
+                            date: chipDate,
+                            color: const Color(0x558AD3D5),
                           ),
                         ),
-                      ),
+
+                        ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: msgs.length,
+                          separatorBuilder: (_, __) => SizedBox(height: 10.h),
+                          itemBuilder: (context, msgIndex) {
+                            final message = msgs[msgIndex];
+                            final isUser = message.senderId == userId;
+
+                            if (message.image.isNotEmpty) {
+                              return Align(
+                                alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                                child: BubbleNormalImage(
+                                  id: message.time.toIso8601String(),
+                                  image: Image.network(ApiConstants.imageBaseUrl + message.image),
+                                  color: isUser ? AppColors.secondaryColor : Colors.grey,
+                                  tail: true,
+                                  delivered: message.readBy,
+                                ),
+                              );
+                            } else {
+                              return Align(
+                                alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                                child: BubbleNormal(
+                                  text: message.content,
+                                  isSender: isUser,
+                                  color: isUser ? AppColors.secondaryColor : Colors.grey,
+                                  textStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15.sp,
+                                  ),
+                                  tail: true,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
                     );
                   },
                 );
@@ -219,7 +306,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: _pickAndSendImage,
                     child: Image.asset(
                       AppIcons.image,
                       height: 30.h,
@@ -236,7 +323,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   SizedBox(width: 5.w),
                   InkWell(
-                    onTap: _sendMessage,
+                    onTap: (){
+                      _sendMessage();
+                      _controller.clear();
+                    },
                     child: Image.asset(
                       AppIcons.send,
                       height: 30.h,
@@ -251,4 +341,3 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-

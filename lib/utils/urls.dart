@@ -45,6 +45,7 @@ class Urls {
 
   //relation chat
   static  String getConversationList (String limit,page) =>  '/message/get/conversations?limit=$limit&page=$page';
-  static  String getMessages (String conversationId,limit,page) =>  '/message/$conversationId';
-
+  static  String getConversationListSearch (String search) =>  '/message/get/conversations?searchQ=$search';
+  static  String getMessages (String conversationId,limit,page) =>  '/message/$conversationId?limit=$limit&page=$page';
+  static const String sendMessage = '/message/send';
 }

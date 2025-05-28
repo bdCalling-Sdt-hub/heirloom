@@ -112,7 +112,12 @@ print("==================================$body");
       PrefsHelper.setString(AppConstants.isLogged, "true");
       Get.offAllNamed(AppRoutes.customNavBar);
 
-      logInLoading(false);}
+      logInLoading(false);
+
+
+    }
+
+
 
   else{
 
