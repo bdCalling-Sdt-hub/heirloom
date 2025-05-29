@@ -1,4 +1,5 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -6,6 +7,7 @@ import '../../global_widgets/toaster.dart';
 import '../../helpers/prefs_helper.dart';
 import '../../routes/app_routes.dart';
 import '../../services/api_client.dart';
+import '../../services/get_fcm_token.dart';
 import '../../utils/app_constant.dart';
 import '../../utils/urls.dart';
 import '../../views/auth/otp_verification_screen.dart';
@@ -96,12 +98,16 @@ print("==================================$body");
   ///************************************************************************///
   ///===============Log in================<>
   RxBool logInLoading = false.obs;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   handleLogIn(String email, String password) async {
-
+    FirebaseService _firebaseService = FirebaseService();
+    String? fcmToken = await _firebaseService.getFCMToken();
+    String? apnsToken = await messaging.getAPNSToken();
     logInLoading.value = true;
     var body = {
       "email": email,
       "password": password,
+      "fcmToken":fcmToken,
     };
     var response = await ApiClient.postData(
         Urls.login, body,);

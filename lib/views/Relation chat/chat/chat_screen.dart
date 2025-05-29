@@ -35,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late final String heroTag;
   late final String heroTagName;
 
-  late final ChatController messagesController;
+  late final ChatController chatController;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -59,15 +59,15 @@ String? userId;
     activeStatus = args['activeStatus'] ?? false;
     heroTag = args['heroTag'] ?? image;
     heroTagName = args['heroTagName'] ?? name;
-    messagesController = Get.put(ChatController(conversationId));
+    chatController = Get.put(ChatController(conversationId));
     print("==========================id ===============$userId");
     _scrollController.addListener(() {
 
       if (_scrollController.position.pixels <=
           _scrollController.position.minScrollExtent + 150 &&
-          !messagesController.isLoadingMore.value &&
-          !messagesController.isLoading.value) {
-        messagesController.loadMore();
+          !chatController.isLoadingMore.value &&
+          !chatController.isLoading.value) {
+        chatController.loadMore();
       }
     });
 
@@ -105,7 +105,7 @@ String? userId;
     print("==========================id ===============$userId");
     final text = _controller.text.trim();
     if (text.isEmpty) return;
-    final success = await messagesController.sendMessage(text);
+    final success = await chatController.sendMessage(text);
     if (success) {
       _controller.clear();
     }
@@ -115,8 +115,8 @@ String? userId;
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return;
 
-    // final file = File(pickedFile.path);
-    // final success = await messagesController.sendImageMessage(file);
+    final file = File(pickedFile.path);
+    final success = await chatController.sendImageMessage(file);
     // if (!success) Get.snackbar('!!!', 'Failed to send image');
   }
 
@@ -178,7 +178,7 @@ String? userId;
           children: [
             Expanded(
               child: Obx(() {
-                if (messagesController.isLoading.value) {
+                if (chatController.isLoading.value) {
                   return ListView.builder(
                     itemCount: 6,
                     itemBuilder: (context, index) => Shimmer.fromColors(
@@ -213,11 +213,11 @@ String? userId;
                   );
                 }
 
-                if (messagesController.messages.isEmpty) {
+                if (chatController.messages.isEmpty) {
                   return const Center(child: CustomTextOne(text: "No messages found"));
                 }
 
-                final groupedMessages = groupMessagesByDate(messagesController.messages);
+                final groupedMessages = groupMessagesByDate(chatController.messages);
 
                 final dateLabels = groupedMessages.keys.toList()
                   ..sort((a, b) {
@@ -267,34 +267,62 @@ String? userId;
                             final message = msgs[msgIndex];
                             final isUser = message.senderId == userId;
 
+                            Widget messageWidget;
+
                             if (message.image.isNotEmpty) {
-                              return Align(
-                                alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                                child: BubbleNormalImage(
-                                  id: message.time.toIso8601String(),
-                                  image: Image.network(ApiConstants.imageBaseUrl + message.image),
-                                  color: isUser ? AppColors.secondaryColor : Colors.grey,
-                                  tail: true,
-                                  delivered: message.readBy,
-                                ),
+                              messageWidget = Column(
+                                crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                children: [
+                                  BubbleNormalImage(
+                                    id: message.time.toIso8601String(),
+                                    image: Image.network(ApiConstants.imageBaseUrl + message.image),
+                                    color: isUser ? AppColors.secondaryColor : Colors.grey,
+                                    tail: true,
+                                    delivered: message.readBy,
+                                  ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    DateFormat.jm().format(message.time.toLocal()), // formatted time e.g. 7:28 AM
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               );
                             } else {
-                              return Align(
-                                alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                                child: BubbleNormal(
-                                  text: message.content,
-                                  isSender: isUser,
-                                  color: isUser ? AppColors.secondaryColor : Colors.grey,
-                                  textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15.sp,
+                              messageWidget = Column(
+                                crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                children: [
+                                  BubbleNormal(
+                                    text: message.content,
+                                    isSender: isUser,
+                                    color: isUser ? AppColors.secondaryColor : Colors.grey,
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.sp,
+                                    ),
+                                    tail: true,
                                   ),
-                                  tail: true,
-                                ),
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    DateFormat.jm().format(message.time.toLocal()),
+                                    style: TextStyle(
+                                      fontSize: 11.sp,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               );
                             }
+
+                            return Align(
+                              alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                              child: messageWidget,
+                            );
                           },
                         ),
+
                       ],
                     );
                   },

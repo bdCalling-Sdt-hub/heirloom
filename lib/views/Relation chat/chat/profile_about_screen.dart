@@ -3,7 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:heirloom/views/Relation%20chat/chat/report_screen.dart';
 
+import '../../../Controller/relation chat/chat_profile_controller.dart';
 import '../../../global_widgets/custom_text.dart';
+import '../../../global_widgets/dialog.dart';
 import '../../../utils/app_colors.dart' show AppColors;
 import 'media_screen.dart';
 
@@ -19,7 +21,13 @@ class ProfileAboutScreen extends StatefulWidget {
 }
 
 class _ProfileAboutScreenState extends State<ProfileAboutScreen> {
-  bool switchValue = false; // Manage the switch state
+  late ChatProfileController controller;
+
+@override
+void initState() {
+  super.initState();
+  controller = Get.put(ChatProfileController(widget.conversationId));
+}
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +60,7 @@ class _ProfileAboutScreenState extends State<ProfileAboutScreen> {
               _buildProfileOption(
                   title: 'Media',
                   onTap: () {
-                    Get.to(MediaScreen(conversationId: widget.conversationId, type: "individual",));
+                    Get.to(MediaScreen(conversationId: widget.conversationId,));
                   }),
 
               _buildProfileOption(
@@ -60,19 +68,45 @@ class _ProfileAboutScreenState extends State<ProfileAboutScreen> {
                   onTap: () {
                     Get.to( ReportScreen(receiverId: widget.conversationId,));
                   }),
-              _buildProfileOption(
+              Obx(() => _buildProfileOption(
                 noIcon: true,
                 padding: 8.r,
-                title: 'Chat With Ai Twin',
+                title: 'Chat With AI Twin',
                 toogle: true,
-                switchValue: switchValue,
-                onSwitchChanged: (bool value) {
-                  setState(() {
-                    switchValue = value; // Update the switch value
-                  });
+                switchValue: controller.isAiTwinEnabled.value,
+                onSwitchChanged: (bool value) async {
+                  final success = await controller.toggleAiMode(value);
+                  if (!success) {
+                    Get.snackbar('Error', 'Failed to update AI Twin mode');
+                  }
                 },
                 onTap: () {},
-              ),
+              )),
+              _buildProfileOption(
+                  title: 'Unfriend',
+                  textColor: Colors.red,
+                  noIcon: true,
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CustomDialog(
+                          title:
+                          "Are you sure you want to remove this person from your friends list?",
+                          subTitle:
+                          "This action will end your friendship connection and you won’t be able to see each other’s updates anymore.",
+                          confirmButtonText: "Unfriend",
+                          onCancel: () {
+                            Get.back();
+                          },
+                          onConfirm: () {
+                            Get.back();
+
+                          },
+                        );
+                      },
+                    );
+                  }),
             ],
           ),
         ),

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:heirloom/services/api_client.dart';
-import 'package:mime_type/mime_type.dart';
 
 import '../../../utils/urls.dart';
 
@@ -27,8 +26,11 @@ class ChatController extends GetxController {
   Future<void> fetchMessages({required int page}) async {
     if (page > totalPages) return;
     try {
-      if (page == 1) isLoading.value = true;
-      else isLoadingMore.value = true;
+      if (page == 1) {
+        isLoading.value = true;
+      } else {
+        isLoadingMore.value = true;
+      }
 
       final response = await ApiClient.getData(Urls.getMessages(conversationId, limit, page));
 
