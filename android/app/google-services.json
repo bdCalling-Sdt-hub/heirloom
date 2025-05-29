@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "558421961604",
+    "project_id": "heirloom-app-523fa",
+    "storage_bucket": "heirloom-app-523fa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558421961604:android:672b0c3459a977e0dd4bd1",
+        "android_client_info": {
+          "package_name": "com.example.heirloom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKe9WP81i3Y_rxc4AOGTZSmimcYtr6ajs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
