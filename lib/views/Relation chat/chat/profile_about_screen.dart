@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:heirloom/views/Relation%20chat/chat/report_screen.dart';
 
 import '../../../Controller/relation chat/chat_profile_controller.dart';
+import '../../../Controller/relation chat/report_controller.dart';
 import '../../../global_widgets/custom_text.dart';
 import '../../../global_widgets/dialog.dart';
 import '../../../utils/app_colors.dart' show AppColors;
@@ -13,8 +14,15 @@ class ProfileAboutScreen extends StatefulWidget {
   final String image;
   final String name;
   final String useName;
+  final String receiverId;
   final String conversationId;
-  const ProfileAboutScreen({super.key, required this.image, required this.name, required this.conversationId, required this.useName});
+  const ProfileAboutScreen(
+      {super.key,
+      required this.image,
+      required this.name,
+      required this.conversationId,
+      required this.useName,
+      required this.receiverId});
 
   @override
   State<ProfileAboutScreen> createState() => _ProfileAboutScreenState();
@@ -22,12 +30,12 @@ class ProfileAboutScreen extends StatefulWidget {
 
 class _ProfileAboutScreenState extends State<ProfileAboutScreen> {
   late ChatProfileController controller;
-
-@override
-void initState() {
-  super.initState();
-  controller = Get.put(ChatProfileController(widget.conversationId));
-}
+  final ReportController reportController=ReportController();
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(ChatProfileController(widget.conversationId));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,32 +64,34 @@ void initState() {
                 text: widget.useName,
               ),
               SizedBox(height: 30.h),
-
               _buildProfileOption(
                   title: 'Media',
                   onTap: () {
-                    Get.to(MediaScreen(conversationId: widget.conversationId,));
+                    Get.to(MediaScreen(
+                      conversationId: widget.conversationId,
+                    ));
                   }),
-
               _buildProfileOption(
                   title: 'Report',
                   onTap: () {
-                    Get.to( ReportScreen(receiverId: widget.conversationId,));
+                    Get.to(ReportScreen(
+                      receiverId: widget.receiverId,
+                    ));
                   }),
               Obx(() => _buildProfileOption(
-                noIcon: true,
-                padding: 8.r,
-                title: 'Chat With AI Twin',
-                toogle: true,
-                switchValue: controller.isAiTwinEnabled.value,
-                onSwitchChanged: (bool value) async {
-                  final success = await controller.toggleAiMode(value);
-                  if (!success) {
-                    Get.snackbar('Error', 'Failed to update AI Twin mode');
-                  }
-                },
-                onTap: () {},
-              )),
+                    noIcon: true,
+                    padding: 8.r,
+                    title: 'Chat With AI Twin',
+                    toogle: true,
+                    switchValue: controller.isAiTwinEnabled.value,
+                    onSwitchChanged: (bool value) async {
+                      final success = await controller.toggleAiMode(value);
+                      if (!success) {
+                        Get.snackbar('Error', 'Failed to update AI Twin mode');
+                      }
+                    },
+                    onTap: () {},
+                  )),
               _buildProfileOption(
                   title: 'Unfriend',
                   textColor: Colors.red,
@@ -92,16 +102,16 @@ void initState() {
                       builder: (BuildContext context) {
                         return CustomDialog(
                           title:
-                          "Are you sure you want to remove this person from your friends list?",
+                              "Are you sure you want to remove this person from your friends list?",
                           subTitle:
-                          "This action will end your friendship connection and you won’t be able to see each other’s updates anymore.",
+                              "This action will end your friendship connection and you won’t be able to see each other’s updates anymore.",
                           confirmButtonText: "Unfriend",
                           onCancel: () {
                             Get.back();
                           },
                           onConfirm: () {
+                            reportController.unfriend(widget.receiverId);
                             Get.back();
-
                           },
                         );
                       },
@@ -130,14 +140,16 @@ Widget _buildProfileOption({
     child: InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: padding??16.h),
+        padding:
+            EdgeInsets.symmetric(horizontal: 16.w, vertical: padding ?? 16.h),
         decoration: BoxDecoration(
           color: AppColors.profileCardColor,
           borderRadius: BorderRadius.all(Radius.circular(16)),
           border: Border.all(color: AppColors.textFieldBorderColor),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1), // Shadow color (with opacity)
+              color:
+                  Colors.black.withOpacity(0.1), // Shadow color (with opacity)
               offset: Offset(0, 4), // Horizontal and vertical offset
               blurRadius: 6, // Blur effect
               spreadRadius: 0, // How much the shadow spreads
@@ -159,8 +171,10 @@ Widget _buildProfileOption({
               Switch(
                 value: switchValue, // Control the Switch value
                 onChanged: onSwitchChanged, // Trigger the callback when toggled
-                activeColor: AppColors.secondaryColor.withOpacity(0.5), // Customize active color
-                inactiveThumbColor: Colors.grey, // Customize inactive thumb color
+                activeColor: AppColors.secondaryColor
+                    .withOpacity(0.5), // Customize active color
+                inactiveThumbColor:
+                    Colors.grey, // Customize inactive thumb color
               ),
             if (noIcon != true)
               Icon(

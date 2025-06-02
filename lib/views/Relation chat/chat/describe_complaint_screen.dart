@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heirloom/Controller/relation%20chat/report_controller.dart';
 
 
+import '../../../Controller/relation chat/chat_profile_controller.dart';
 import '../../../global_widgets/custom_text.dart';
 import '../../../global_widgets/custom_text_button.dart';
 import '../../../global_widgets/custom_text_field.dart';
@@ -21,7 +23,7 @@ class DescribeComplaintScreen extends StatefulWidget {
 
 class _DescribeComplaintScreenState extends State<DescribeComplaintScreen> {
   final TextEditingController complaintController = TextEditingController();
-  // ProfileAboutController controller =ProfileAboutController();
+  final ReportController controller=ReportController();
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +93,10 @@ class _DescribeComplaintScreenState extends State<DescribeComplaintScreen> {
                 onTap: () {
                   if (complaintController.text.isNotEmpty) {
                     print('Complaint Submitted: ${complaintController.text}');
-                  //  controller.submitReport(widget.selectedOption,complaintController.text,widget.receiverId);
-                    Get.back();
+
+controller.report(widget.selectedOption, complaintController.text, widget.receiverId);
+
+
                   } else {
                     // Handle empty complaint
                     Get.snackbar("!!!!!", 'Please describe your complaint');

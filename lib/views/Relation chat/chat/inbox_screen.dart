@@ -148,6 +148,7 @@ class _InboxScreenState extends State<InboxScreen> {
                             'conversationId': conv.id,
                             'name': conv.name,
                             'userName': conv.userName,
+                            'receiver_id': conv.receiverId,
                             'image': conv.image.isEmpty ? AppImages.model :ApiConstants.imageBaseUrl+conv.image,
                             'activeStatus': conv.activeStatus,
                             'heroTag': "avatar_${conv.id}",

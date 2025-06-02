@@ -88,6 +88,7 @@ class Conversation {
   final String userName;
   final String image;
   final String senderId;
+  final String receiverId;
   final DateTime time;
   final bool activeStatus;  // changed to bool
 
@@ -98,6 +99,7 @@ class Conversation {
     required this.userName,
     required this.image,
     required this.senderId,
+    required this.receiverId,
     required this.time,
     this.activeStatus = false,
   });
@@ -113,6 +115,7 @@ class Conversation {
       userName: json['userName'] ?? '',
       image: json['image'] ?? '',
       senderId: json['sender_id'] ?? '',
+      receiverId: json['reciver_id'] ?? '',
       time: DateTime.tryParse(json['time'] ?? '') ?? DateTime.now(),
       activeStatus: json['activeStatus'] ?? false,
     );

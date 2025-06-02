@@ -50,6 +50,8 @@ class Urls {
   static  String getMessages (String conversationId,limit,page) =>  '/message/$conversationId?limit=$limit&page=$page';
   static const String sendMessage = '/message/send';
   static const String changeAiMode = '/message/aimode';
+  static  String report (String receiverId)=> '/report/add/$receiverId';
+  static  String unfriend (String receiverId)=> '/friend/unfriend/$receiverId';
 
 
 }

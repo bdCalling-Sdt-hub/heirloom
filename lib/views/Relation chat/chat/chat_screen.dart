@@ -30,6 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late final String conversationId;
   late final String name;
   late final String userName;
+  late final String receiverId;
   late final String image;
   late final bool activeStatus;
   late final String heroTag;
@@ -55,6 +56,7 @@ String? userId;
     conversationId = args['conversationId'] ?? '';
     name = args['name'] ?? 'Unknown';
     userName = args['userName'] ?? 'Unknown';
+    receiverId = args['receiver_id'] ?? 'Unknown';
     image = args['image'] ?? AppImages.model;
     activeStatus = args['activeStatus'] ?? false;
     heroTag = args['heroTag'] ?? image;
@@ -139,6 +141,7 @@ String? userId;
               name: name,
               useName: userName,
               conversationId: conversationId,
+              receiverId: receiverId,
             ));
           },
           child: Row(
