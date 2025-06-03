@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:heirloom/global_widgets/custom_no_data_widget.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../Controller/profile/journal/journal_controller.dart';
@@ -10,6 +12,7 @@ import '../../../global_widgets/custom_text_button.dart';
 import '../../../global_widgets/dialog.dart';
 import '../../../routes/app_routes.dart';
 import '../../../utils/app_colors.dart';
+import '../../../utils/app_images.dart';
 
 
 class JournalScreen extends StatelessWidget {
@@ -76,7 +79,7 @@ class JournalScreen extends StatelessWidget {
                   }
 
                   if (controller.journals.isEmpty) {
-                    return const Center(child: Text('No journals found.'));
+                    return CustomNoDataWidget(text: "No journals found.");
                   }
 
                   return ListView.builder(

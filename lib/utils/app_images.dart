@@ -13,4 +13,9 @@ class AppImages {
   static const String onboarding1 = "assets/animations/onboarding1.json";
   static const String onboarding2 = "assets/animations/onboarding3.json";
   static const String onboarding3 = "assets/animations/onboarding2.json";
+
+
+  //animations
+  static const String emptyBox = "assets/animations/emptyBox.json";
+  static const String noData = "assets/animations/noData.json";
 }

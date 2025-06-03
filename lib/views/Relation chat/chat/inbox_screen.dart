@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:heirloom/global_widgets/custom_no_data_widget.dart';
 import 'package:heirloom/global_widgets/custom_text.dart';
 import 'package:heirloom/services/api_constants.dart';
 import 'package:heirloom/utils/app_constant.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../Controller/relation chat/inbox_controller.dart';
@@ -118,7 +120,7 @@ inboxController.fetchConversations(page: 1);
                 }
 
                 if (inboxController.conversations.isEmpty) {
-                  return const Center(child: CustomTextOne(text: "No conversations found"));
+                  return  CustomNoDataWidget(text: "No Conversations Found");
                 }
 
                 return RefreshIndicator(

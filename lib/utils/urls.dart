@@ -54,4 +54,23 @@ class Urls {
   static  String unfriend (String receiverId)=> '/friend/unfriend/$receiverId';
 
 
+  //friend
+  static  String getUserList (String conversationId,limit,page) =>  '/common/pepole?limit=$limit&page=$page';
+  static  String getUserListSearch (String conversationId,limit,page,search) =>  '/common/pepole?searchQ=$search&limit=$limit&page=$page';
+  static const String friendRequest = '/friend/request';
+
+
+  // requested
+  static  String getRequest (String relation,limit,page) =>  '/friend/request?relation=$relation&limit=$limit&page=$page';
+  static  String actionRequest (String id,status) =>  '/friend/action/$id?status=$status';
+
+
+  //legacy message
+  static  String getLegacyMessage (String limit,page) =>  '/legacy?page=$page&limit=$limit';
+  static const String addLegacy = '/legacy/add';
+  static const String getFriends = "/friend/list";
+  static  String legacyEdit (String legacyId) =>  '/legacy/edit/$legacyId';
+  static  String legacyView (String limit,page) =>  '/legacy/triggered?page=$page&limit=$limit';
+  static  String deleteLegacy (String legacyId) =>  '/legacy/delete/$legacyId';
+
 }

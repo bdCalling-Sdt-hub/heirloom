@@ -1,106 +1,274 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:heirloom/global_widgets/custom_text.dart'; // Assuming you have these custom widgets
-import 'package:heirloom/global_widgets/custom_text_button.dart';
-import 'package:heirloom/utils/app_colors.dart'; // Custom colors
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../../../global_widgets/custom_text_field.dart'; // For date formatting
+import '../../../Controller/profile/legacy/legacy_controller.dart';
+import '../../../global_widgets/custom_text.dart';
+import '../../../global_widgets/custom_text_button.dart';
+import '../../../global_widgets/custom_text_field.dart';
+import '../../../utils/app_colors.dart';
 
 class AddLegacyMessageScreen extends StatefulWidget {
-  const AddLegacyMessageScreen({super.key});
+  final Map<String, dynamic>? existingLegacy; // For edit mode, pass existing legacy
+
+  const AddLegacyMessageScreen({Key? key, this.existingLegacy}) : super(key: key);
 
   @override
   _AddLegacyMessageScreenState createState() => _AddLegacyMessageScreenState();
 }
 
 class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
-  final TextEditingController _messageController = TextEditingController();
-  final TextEditingController _recipientController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  String _recipient = "Alja"; // Default value, can be dynamic
-  DateTime? _deliveryDate;
+  final LegacyController controller = Get.find<LegacyController>();
 
-  // Method to pick the date
+  final TextEditingController _messageController = TextEditingController();
+  final TextEditingController _recipientSearchController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+
+  List<String> selectedRecipients = [];
+
+  bool get isEditing => widget.existingLegacy != null;
+  String? get editingLegacyId => widget.existingLegacy?['_id'];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Fetch all friends initially
+    controller.fetchFriends();
+
+    if (isEditing) {
+      final legacy = widget.existingLegacy!;
+
+      _messageController.text = legacy['message'] ?? '';
+
+      if (legacy['recipients'] != null) {
+        selectedRecipients = List<String>.from(
+          (legacy['recipients'] as List).map((r) => r['_id'].toString()),
+        );
+        _recipientSearchController.text = (legacy['recipients'] as List)
+            .map((r) => r['name'] ?? 'Unknown')
+            .join(', ');
+      }
+
+      final timeStr = legacy['time'] ?? legacy['triggerDate'];
+      if (timeStr != null) {
+        try {
+          final dt = DateTime.parse(timeStr);
+          _selectedDate = dt;
+          _selectedTime = TimeOfDay(hour: dt.hour, minute: dt.minute);
+          _dateController.text = DateFormat('MM/dd/yyyy').format(dt);
+          _timeController.text = DateFormat.jm().format(dt);
+        } catch (_) {}
+      }
+    }
+  }
+
   Future<void> _selectDate(BuildContext context) async {
-    DateTime initialDate = DateTime.now();
-    DateTime firstDate = DateTime(2020);
-    DateTime lastDate = DateTime(2101);
-    final DateTime? picked = await showDatePicker(
+    final now = DateTime.now();
+    final picked = await showDatePicker(
       context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
-      lastDate: lastDate,
+      initialDate: _selectedDate ?? now,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
     );
-    if (picked != null && picked != _deliveryDate) {
+    if (picked != null) {
       setState(() {
-        _deliveryDate = picked;
-        _dateController.text =
-            DateFormat('MM/dd/yyyy').format(_deliveryDate!); // Format date
+        _selectedDate = picked;
+        _dateController.text = DateFormat('MM/dd/yyyy').format(picked);
       });
     }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final now = TimeOfDay.now();
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime ?? now,
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedTime = picked;
+        final localizations = MaterialLocalizations.of(context);
+        _timeController.text = localizations.formatTimeOfDay(picked, alwaysUse24HourFormat: false);
+      });
+    }
+  }
+
+  String? getCombinedDateTimeIso() {
+    if (_selectedDate == null) return null;
+
+    final date = _selectedDate!;
+    final time = _selectedTime ?? TimeOfDay(hour: 0, minute: 0);
+
+    final combined = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+
+    return combined.toUtc().toIso8601String();
+  }
+
+  void _onSearchChanged(String query) {
+    controller.fetchFriends(search: query);
+  }
+
+  void _toggleRecipientSelection(String id) {
+    setState(() {
+      if (selectedRecipients.contains(id)) {
+        selectedRecipients.remove(id);
+      } else {
+        selectedRecipients.add(id);
+      }
+    });
+  }
+
+  Widget _buildRecipientList() {
+    return Obx(() {
+      if (controller.isFriendsLoading.value) {
+        return Center(child: CircularProgressIndicator());
+      }
+
+      if (controller.friends.isEmpty) {
+        return CustomTextTwo(text: "No recipients found");
+      }
+
+      return SizedBox(
+        height: 100.h,
+        child: ListView.builder(
+          itemCount: controller.friends.length,
+          itemBuilder: (context, index) {
+            final friend = controller.friends[index];
+            final friendId = friend['_id'].toString();
+            final isSelected = selectedRecipients.contains(friendId);
+
+            return Card(
+              color: AppColors.settingCardColor,
+              child: ListTile(
+                title: CustomTextTwo(text:friend['name'] ?? 'Unknown',textAlign: TextAlign.start,),
+                trailing: isSelected
+                    ? Icon(Icons.check_box, color: AppColors.secondaryColor)
+                    : Icon(Icons.check_box_outline_blank),
+                onTap: () => _toggleRecipientSelection(friendId),
+              ),
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  Future<void> _submitLegacyMessage() async {
+    final triggerDate = getCombinedDateTimeIso();
+    final message = _messageController.text.trim();
+
+    if (selectedRecipients.isEmpty) {
+      Get.snackbar("Error", "Please select at least one recipient");
+      return;
+    }
+
+    if (triggerDate == null) {
+      Get.snackbar("Error", "Please select delivery date and time");
+      return;
+    }
+
+    if (message.isEmpty) {
+      Get.snackbar("Error", "Message cannot be empty");
+      return;
+    }
+
+    bool success;
+
+    if (isEditing) {
+      success = await controller.editLegacyMessage(
+        legacyId: editingLegacyId!,
+        recipients: selectedRecipients,
+        triggerDateIso: triggerDate,
+        message: message,
+      );
+    } else {
+      success = await controller.addLegacyMessage(
+        recipients: selectedRecipients,
+        triggerDateIso: triggerDate,
+        message: message,
+      );
+    }
+
+    if (success) {
+      Get.back();
+    }
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    _dateController.dispose();
+    _timeController.dispose();
+    _recipientSearchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomTextOne(
-          text: 'Legacy Message',
-        ),
+        title: CustomTextOne(text: isEditing ? 'Edit Legacy Message' : 'Add Legacy Message'),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(20.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 15.h,
+            spacing: 20.h,
             children: [
-              // Recipient Field (Search/Select recipient)
-              CustomTextOne(
-                text: 'Recipient',
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textColor,
-              ),
+              CustomTextOne(text: 'Recipients', fontSize: 16.sp, fontWeight: FontWeight.w500),
 
               CustomTextField(
-                controller: _recipientController,
-                hintText: 'Search or select recipient',
-                suffixIcon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
+                controller: _recipientSearchController,
+                hintText: 'Search recipients',
+                suffixIcon: Icon(Icons.search, color: Colors.white),
+                onChanged: _onSearchChanged,
               ),
 
-              // Delivery Trigger (Date Picker)
-              CustomTextOne(
-                text: 'Delivery Trigger',
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textColor,
-              ),
 
-              CustomTextField(
-                controller: _dateController,
-                hintText: 'MM/DD/YYYY',
-                readOnly: true,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    Icons.calendar_month,
-                    color: Colors.white,
+
+              _buildRecipientList(),
+
+
+
+              CustomTextOne(text: 'Delivery Trigger', fontSize: 16.sp, fontWeight: FontWeight.w500),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextField(
+                      controller: _dateController,
+                      hintText: 'MM/DD/YYYY',
+                      readOnly: true,
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.calendar_month, color: Colors.white),
+                        onPressed: () => _selectDate(context),
+                      ),
+                    ),
                   ),
-                  onPressed: () => _selectDate(context),
-                ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: CustomTextField(
+                      controller: _timeController,
+                      hintText: '10:00 AM',
+                      readOnly: true,
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.access_time_outlined, color: Colors.white),
+                        onPressed: () => _selectTime(context),
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
-              // Message Field
-              CustomTextOne(
-                text: 'Messages',
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textColor,
-              ),
+
+              CustomTextOne(text: 'Message', fontSize: 16.sp, fontWeight: FontWeight.w500),
 
               CustomTextField(
                 controller: _messageController,
@@ -109,24 +277,16 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
                 maxLength: 120,
               ),
 
-              SizedBox(
-                height: 20.h,
+
+
+              CustomTextButton(
+                text: isEditing ? 'Update Legacy' : 'Compose Legacy',
+                onTap: _submitLegacyMessage,
               ),
-              // Compose Legacy Button
-              CustomTextButton(text: 'Compose Legacy', onTap: () {})
             ],
           ),
         ),
       ),
     );
-  }
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    _messageController.dispose();
-    _dateController.dispose();
-    _recipientController.dispose();
-
   }
 }
