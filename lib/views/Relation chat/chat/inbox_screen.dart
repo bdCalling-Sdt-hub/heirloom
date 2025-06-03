@@ -32,7 +32,7 @@ class _InboxScreenState extends State<InboxScreen> {
   @override
   void initState() {
     super.initState();
-
+inboxController.fetchConversations(page: 1);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 150 &&
@@ -149,11 +149,14 @@ class _InboxScreenState extends State<InboxScreen> {
                             'name': conv.name,
                             'userName': conv.userName,
                             'receiver_id': conv.receiverId,
-                            'image': conv.image.isEmpty ? AppImages.model :ApiConstants.imageBaseUrl+conv.image,
+                            'image': conv.image.isEmpty ? AppImages.model : ApiConstants.imageBaseUrl + conv.image,
                             'activeStatus': conv.activeStatus,
+                            'aiUser': conv.aiUser,
+                            'chatAccess': conv.chatAccess,
                             'heroTag': "avatar_${conv.id}",
                             'heroTagName': "title_${conv.name}",
                           });
+
                         },
                         child: CustomChatTile(
                           title: conv.name.isEmpty ? "Unknown" : conv.name,

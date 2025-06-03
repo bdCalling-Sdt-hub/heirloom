@@ -118,7 +118,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   receiverId: widget.receiverId,
                 ),);
                 } else {
-                  Get.snackbar("!!!!!!!", 'Please select a report option');
+                  Get.snackbar("!!!", 'Please select a report option');
                 }
               },
 

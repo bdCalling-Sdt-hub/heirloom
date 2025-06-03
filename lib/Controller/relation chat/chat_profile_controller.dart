@@ -1,15 +1,16 @@
 import 'package:get/get.dart';
+import 'package:heirloom/Controller/relation%20chat/chat_controller.dart';
+import 'package:heirloom/Controller/relation%20chat/inbox_controller.dart';
+import 'package:heirloom/routes/app_routes.dart';
 import 'package:heirloom/services/api_client.dart';
 import '../../../utils/urls.dart';
 import '../../services/api_constants.dart';
 
 class ChatProfileController extends GetxController {
   final String conversationId;
-
   var mediaImages = <String>[].obs;
   var isLoading = false.obs;
   var isLoadingMore = false.obs;
-
   int currentPage = 1;
   int totalPages = 1;
   final int limit = 20;
@@ -76,11 +77,16 @@ class ChatProfileController extends GetxController {
 
     if (response.statusCode == 200) {
       isAiTwinEnabled.value = status;
+
+      Get.offAllNamed(AppRoutes.customNavBar);
+
+
       return true;
     } else {
       return false;
     }
   }
+
 
 
 }

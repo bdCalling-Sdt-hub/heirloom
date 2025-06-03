@@ -16,13 +16,18 @@ class ProfileAboutScreen extends StatefulWidget {
   final String useName;
   final String receiverId;
   final String conversationId;
+  final bool aiUser;
+  final bool chatAccess;
+
   const ProfileAboutScreen(
       {super.key,
       required this.image,
       required this.name,
       required this.conversationId,
       required this.useName,
-      required this.receiverId});
+      required this.receiverId,
+      required this.aiUser,
+      required this.chatAccess});
 
   @override
   State<ProfileAboutScreen> createState() => _ProfileAboutScreenState();
@@ -30,11 +35,12 @@ class ProfileAboutScreen extends StatefulWidget {
 
 class _ProfileAboutScreenState extends State<ProfileAboutScreen> {
   late ChatProfileController controller;
-  final ReportController reportController=ReportController();
+  final ReportController reportController = ReportController();
   @override
   void initState() {
     super.initState();
     controller = Get.put(ChatProfileController(widget.conversationId));
+    controller.isAiTwinEnabled.value = widget.aiUser;
   }
 
   @override
@@ -78,45 +84,50 @@ class _ProfileAboutScreenState extends State<ProfileAboutScreen> {
                       receiverId: widget.receiverId,
                     ));
                   }),
-              Obx(() => _buildProfileOption(
-                    noIcon: true,
-                    padding: 8.r,
-                    title: 'Chat With AI Twin',
-                    toogle: true,
-                    switchValue: controller.isAiTwinEnabled.value,
-                    onSwitchChanged: (bool value) async {
-                      final success = await controller.toggleAiMode(value);
-                      if (!success) {
-                        Get.snackbar('Error', 'Failed to update AI Twin mode');
-                      }
-                    },
-                    onTap: () {},
-                  )),
-              _buildProfileOption(
-                  title: 'Unfriend',
-                  textColor: Colors.red,
-                  noIcon: true,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CustomDialog(
-                          title:
-                              "Are you sure you want to remove this person from your friends list?",
-                          subTitle:
-                              "This action will end your friendship connection and you won’t be able to see each other’s updates anymore.",
-                          confirmButtonText: "Unfriend",
-                          onCancel: () {
-                            Get.back();
-                          },
-                          onConfirm: () {
-                            reportController.unfriend(widget.receiverId);
-                            Get.back();
+              widget.chatAccess
+                  ? Obx(() => _buildProfileOption(
+                        noIcon: true,
+                        padding: 8.r,
+                        title: 'Chat With AI Twin',
+                        toogle: true,
+                        switchValue: controller.isAiTwinEnabled.value,
+                        onSwitchChanged: (bool value) async {
+                          final success = await controller.toggleAiMode(value);
+                          if (!success) {
+                            Get.snackbar(
+                                'Error', 'Failed to update AI Twin mode');
+                          }
+                        },
+                        onTap: () {},
+                      ))
+                  : Container(),
+              widget.chatAccess
+                  ? _buildProfileOption(
+                      title: 'Unfriend',
+                      textColor: Colors.red,
+                      noIcon: true,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomDialog(
+                              title:
+                                  "Are you sure you want to remove this person from your friends list?",
+                              subTitle:
+                                  "This action will end your friendship connection and you won’t be able to see each other’s updates anymore.",
+                              confirmButtonText: "Unfriend",
+                              onCancel: () {
+                                Get.back();
+                              },
+                              onConfirm: () {
+                                reportController.unfriend(widget.receiverId);
+                                Get.back();
+                              },
+                            );
                           },
                         );
-                      },
-                    );
-                  }),
+                      })
+                  : Container(),
             ],
           ),
         ),

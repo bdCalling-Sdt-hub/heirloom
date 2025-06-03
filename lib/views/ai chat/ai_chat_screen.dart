@@ -99,14 +99,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
               padding: EdgeInsets.symmetric(vertical: 10.h),
               child: Row(
                 children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Image.asset(
-                      AppIcons.image,
-                      height: 30.h,
-                    ),
-                  ),
-                  SizedBox(width: 5.w),
+
                   Expanded(
                     child: CustomTextField(
                       controller: _controller,

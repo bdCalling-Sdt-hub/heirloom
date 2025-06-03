@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:heirloom/utils/urls.dart';
-import '../../services/api_client.dart'; // adjust import as needed
+import '../../services/api_client.dart';
 
 class InboxController extends GetxController {
   var conversations = <Conversation>[].obs;
@@ -90,7 +90,9 @@ class Conversation {
   final String senderId;
   final String receiverId;
   final DateTime time;
-  final bool activeStatus;  // changed to bool
+  final bool activeStatus;
+  final bool aiUser;
+  final bool chatAccess;
 
   Conversation({
     required this.id,
@@ -102,10 +104,9 @@ class Conversation {
     required this.receiverId,
     required this.time,
     this.activeStatus = false,
+    this.aiUser = false,
+    this.chatAccess = true,
   });
-
-  // Friendly text based on activeStatus bool
-  String get activeStatusText => activeStatus ? 'Active now' : 'Offline';
 
   factory Conversation.fromJson(Map<String, dynamic> json) {
     return Conversation(
@@ -118,8 +119,11 @@ class Conversation {
       receiverId: json['reciver_id'] ?? '',
       time: DateTime.tryParse(json['time'] ?? '') ?? DateTime.now(),
       activeStatus: json['activeStatus'] ?? false,
+      aiUser: json['ai_user'] ?? false,
+      chatAccess: json['chatAccess'] ?? true,
     );
   }
 }
+
 
 

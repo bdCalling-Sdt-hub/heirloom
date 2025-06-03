@@ -35,6 +35,8 @@ class _ChatScreenState extends State<ChatScreen> {
   late final bool activeStatus;
   late final String heroTag;
   late final String heroTagName;
+  late final bool aiUser;
+  late final bool chatAccess;
 
   late final ChatController chatController;
 
@@ -43,11 +45,11 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final ImagePicker _picker = ImagePicker();
 
-String? userId;
-  void getId () async{
-    userId=await PrefsHelper.getString(AppConstants.userId);
-
+  String? userId;
+  void getId() async {
+    userId = await PrefsHelper.getString(AppConstants.userId);
   }
+
   @override
   void initState() {
     super.initState();
@@ -60,21 +62,21 @@ String? userId;
     image = args['image'] ?? AppImages.model;
     activeStatus = args['activeStatus'] ?? false;
     heroTag = args['heroTag'] ?? image;
+    aiUser = args['aiUser'] ?? false;
+    chatAccess = args['chatAccess'] ?? true;
     heroTagName = args['heroTagName'] ?? name;
     chatController = Get.put(ChatController(conversationId));
     print("==========================id ===============$userId");
     _scrollController.addListener(() {
-
       if (_scrollController.position.pixels <=
-          _scrollController.position.minScrollExtent + 150 &&
+              _scrollController.position.minScrollExtent + 150 &&
           !chatController.isLoadingMore.value &&
           !chatController.isLoading.value) {
         chatController.loadMore();
       }
     });
-
-
   }
+
   String formatDateLabel(DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -89,6 +91,7 @@ String? userId;
       return DateFormat.yMMMMd().format(date); // e.g., May 18, 2025
     }
   }
+
   Map<String, List<Message>> groupMessagesByDate(List<Message> messages) {
     messages.sort((a, b) => a.time.compareTo(b.time)); // sort ascending by time
     final Map<String, List<Message>> grouped = {};
@@ -101,7 +104,6 @@ String? userId;
     }
     return grouped;
   }
-
 
   Future<void> _sendMessage() async {
     print("==========================id ===============$userId");
@@ -136,12 +138,14 @@ String? userId;
         centerTitle: true,
         title: InkWell(
           onTap: () {
-            Get.to(ProfileAboutScreen(
+            Get.to( ()=>ProfileAboutScreen(
               image: image,
               name: name,
               useName: userName,
               conversationId: conversationId,
               receiverId: receiverId,
+              aiUser: aiUser,
+              chatAccess: chatAccess,
             ));
           },
           child: Row(
@@ -168,7 +172,8 @@ String? userId;
                       ),
                     ),
                   ),
-                  CustomTextTwo(text: activeStatus?"Active Now":"Not Active"),
+                  CustomTextTwo(
+                      text: activeStatus ? "Active Now" : "Not Active"),
                 ],
               ),
             ],
@@ -204,8 +209,15 @@ String? userId;
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(height: 14.h, color: Colors.white, margin: EdgeInsets.symmetric(vertical: 4.h)),
-                                  Container(height: 14.h, width: 150.w, color: Colors.white),
+                                  Container(
+                                      height: 14.h,
+                                      color: Colors.white,
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 4.h)),
+                                  Container(
+                                      height: 14.h,
+                                      width: 150.w,
+                                      color: Colors.white),
                                 ],
                               ),
                             ),
@@ -217,18 +229,23 @@ String? userId;
                 }
 
                 if (chatController.messages.isEmpty) {
-                  return const Center(child: CustomTextOne(text: "No messages found"));
+                  return const Center(
+                      child: CustomTextOne(text: "No messages found"));
                 }
 
-                final groupedMessages = groupMessagesByDate(chatController.messages);
+                final groupedMessages =
+                    groupMessagesByDate(chatController.messages);
 
                 final dateLabels = groupedMessages.keys.toList()
                   ..sort((a, b) {
                     DateTime parseLabel(String label) {
                       if (label == "Today") return DateTime.now();
-                      if (label == "Yesterday") return DateTime.now().subtract(const Duration(days: 1));
+                      if (label == "Yesterday") {
+                        return DateTime.now().subtract(const Duration(days: 1));
+                      }
                       return DateFormat.yMMMMd().parse(label);
                     }
+
                     return parseLabel(b).compareTo(parseLabel(a));
                   });
 
@@ -260,7 +277,6 @@ String? userId;
                             color: const Color(0x558AD3D5),
                           ),
                         ),
-
                         ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -274,18 +290,25 @@ String? userId;
 
                             if (message.image.isNotEmpty) {
                               messageWidget = Column(
-                                crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                crossAxisAlignment: isUser
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
                                 children: [
                                   BubbleNormalImage(
                                     id: message.time.toIso8601String(),
-                                    image: Image.network(ApiConstants.imageBaseUrl + message.image),
-                                    color: isUser ? AppColors.secondaryColor : Colors.grey,
+                                    image: Image.network(
+                                        ApiConstants.imageBaseUrl +
+                                            message.image),
+                                    color: isUser
+                                        ? AppColors.secondaryColor
+                                        : Colors.grey,
                                     tail: true,
                                     delivered: message.readBy,
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    DateFormat.jm().format(message.time.toLocal()), // formatted time e.g. 7:28 AM
+                                    DateFormat.jm().format(message.time
+                                        .toLocal()), // formatted time e.g. 7:28 AM
                                     style: TextStyle(
                                       fontSize: 11.sp,
                                       color: Colors.grey,
@@ -295,12 +318,16 @@ String? userId;
                               );
                             } else {
                               messageWidget = Column(
-                                crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                crossAxisAlignment: isUser
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
                                 children: [
                                   BubbleNormal(
                                     text: message.content,
                                     isSender: isUser,
-                                    color: isUser ? AppColors.secondaryColor : Colors.grey,
+                                    color: isUser
+                                        ? AppColors.secondaryColor
+                                        : Colors.grey,
                                     textStyle: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15.sp,
@@ -309,7 +336,8 @@ String? userId;
                                   ),
                                   SizedBox(height: 4.h),
                                   Text(
-                                    DateFormat.jm().format(message.time.toLocal()),
+                                    DateFormat.jm()
+                                        .format(message.time.toLocal()),
                                     style: TextStyle(
                                       fontSize: 11.sp,
                                       color: Colors.grey,
@@ -320,52 +348,67 @@ String? userId;
                             }
 
                             return Align(
-                              alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                              alignment: isUser
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
                               child: messageWidget,
                             );
                           },
                         ),
-
                       ],
                     );
                   },
                 );
               }),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h),
-              child: Row(
-                children: [
-                  InkWell(
-                    onTap: _pickAndSendImage,
-                    child: Image.asset(
-                      AppIcons.image,
-                      height: 30.h,
-                    ),
+            chatAccess
+                ? aiUser
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.h),
+                        child: CustomTextTwo(
+                            text:
+                                "AI Mode is currently enabled. Please turn it off to resume normal conversation."),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: _pickAndSendImage,
+                              child: Image.asset(
+                                AppIcons.image,
+                                height: 30.h,
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
+                            Expanded(
+                              child: CustomTextField(
+                                controller: _controller,
+                                validator: (value) => null,
+                                hintText: 'Type your message',
+                                borderRadio: 16.r,
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
+                            InkWell(
+                              onTap: () {
+                                _sendMessage();
+                                _controller.clear();
+                              },
+                              child: Image.asset(
+                                AppIcons.send,
+                                height: 30.h,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                : Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    child: CustomTextTwo(
+                        text:
+                            "You Can't Message in this conversation Anymore!"),
                   ),
-                  SizedBox(width: 5.w),
-                  Expanded(
-                    child: CustomTextField(
-                      controller: _controller,
-                      validator: (value) => null,
-                      hintText: 'Type your message',
-                      borderRadio: 16.r,
-                    ),
-                  ),
-                  SizedBox(width: 5.w),
-                  InkWell(
-                    onTap: (){
-                      _sendMessage();
-                      _controller.clear();
-                    },
-                    child: Image.asset(
-                      AppIcons.send,
-                      height: 30.h,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
