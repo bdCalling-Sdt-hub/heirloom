@@ -48,9 +48,9 @@ class MyApp extends StatelessWidget {
          initialBinding: ControllerBindings(),
 
 
-          // builder: (context, child) {
-          //   return Scaffold(body: NoInternetWrapper(child: child!));
-          // },
+          builder: (context, child) {
+            return Scaffold(body: NoInternetWrapper(child: child!));
+          },
           // builder: DevicePreview.appBuilder, // Add this line to wrap the app in DevicePreview.
           // locale: DevicePreview.locale(context), // Adds support for locale preview.
         );

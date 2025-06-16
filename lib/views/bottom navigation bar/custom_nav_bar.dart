@@ -35,11 +35,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//
-// extendBody: true,
-//       backgroundColor: Colors.transparent,
+
       appBar: AppBar(
-        // backgroundColor: AppColors.primaryColor,
         title: AppLogo(
           img: AppImages.appLogo2,
           height: 30.h,

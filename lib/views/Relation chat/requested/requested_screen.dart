@@ -200,8 +200,9 @@ class _RequestedScreenState extends State<RequestedScreen> {
                       child: CustomTextButton(
                         text: "Accept",
                         onTap: () async {
-                          await controller.actionRequest(request['_id'], 'accepted');
                           Get.back();
+                          await controller.actionRequest(request['_id'], 'accepted');
+
                         },
                         color: Colors.green,
                         padding: 4.r,

@@ -71,24 +71,22 @@ class RequestedController extends GetxController {
   /// Call API to accept or reject a request
   Future<void> actionRequest(String id, String status) async {
     try {
-      final url = Urls.actionRequest(id, status); // e.g. /friend/action/{id}?status=accepted/rejected
-
-      final response = await ApiClient.postData(url, {}); // assuming POST with empty body
+      final url = Urls.actionRequest(id, status);
+      final ApiClient apiClient=ApiClient();
+      final response = await apiClient.putData(url,{});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.body;
         if (data['success'] == true) {
           Get.snackbar('Success', data['message'] ?? 'Action successful');
 
-          // Update local request list to reflect change (remove or update)
-          // Here, let's remove the request from the list
           requests.removeWhere((r) => r['_id'] == id);
           requests.refresh();
         } else {
-          Get.snackbar('Error', data['message'] ?? 'Action failed');
+          Get.snackbar('!!!', data['message'] ?? 'Action failed');
         }
       } else {
-        Get.snackbar('Error', 'Error: ${response.statusCode}');
+        Get.snackbar('!!!', 'Error: ${response.statusCode}');
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred: $e');

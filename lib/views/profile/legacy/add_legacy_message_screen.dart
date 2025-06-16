@@ -164,17 +164,17 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
     final message = _messageController.text.trim();
 
     if (selectedRecipients.isEmpty) {
-      Get.snackbar("Error", "Please select at least one recipient");
+      Get.snackbar("!!!", "Please select at least one recipient");
       return;
     }
 
     if (triggerDate == null) {
-      Get.snackbar("Error", "Please select delivery date and time");
+      Get.snackbar("!!!", "Please select delivery date and time");
       return;
     }
 
     if (message.isEmpty) {
-      Get.snackbar("Error", "Message cannot be empty");
+      Get.snackbar("!!!", "Message cannot be empty");
       return;
     }
 
@@ -185,7 +185,8 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
         legacyId: editingLegacyId!,
         recipients: selectedRecipients,
         triggerDateIso: triggerDate,
-        message: message,
+       message: message,
+
       );
     } else {
       success = await controller.addLegacyMessage(

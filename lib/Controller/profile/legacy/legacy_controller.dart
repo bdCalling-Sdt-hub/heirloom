@@ -119,20 +119,29 @@ class LegacyController extends GetxController {
     required String triggerDateIso,
     required String message,
   }) async {
-    final body = {
+    final body = jsonEncode({
       "recipients": recipients,
       "triggerDate": triggerDateIso,
       "messages": message,
-    };
+    });
 
     try {
       final url = Urls.legacyEdit(legacyId);
-      final response = await ApiClient.patch(url, jsonEncode(body));
+      final response = await ApiClient.patch(
+        url,
+        body,
+        headers: {'Content-Type': 'application/json'},
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Get.snackbar('Success', response.body['message'] ?? 'Legacy message updated');
-        fetchLegacyMessages(); // Refresh list
+
+        Timer(const Duration(seconds: 1), () {
+          Get.snackbar('Success', response.body['message'] ?? 'Legacy message updated');
+          fetchLegacyMessages();
+        });
+
         return true;
+
       } else {
         Get.snackbar('!!!', response.body['message'] ?? 'Failed to update legacy message');
       }
@@ -141,7 +150,6 @@ class LegacyController extends GetxController {
     }
     return false;
   }
-
 
   var friends = <Map<String, dynamic>>[].obs;
   var isFriendsLoading = false.obs;

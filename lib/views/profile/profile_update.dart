@@ -49,16 +49,16 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
     profileController.fetchProfileData();
 
     ever(profileController.isLoading, (bool loading) {
-      if (!loading) {
+      if (!loading && mounted) {
         nameController.text = profileController.fullName.value;
         addressTEController.text = profileController.address.value;
         selectedAgeRange.value = profileController.ageRange.value.isNotEmpty
             ? profileController.ageRange.value
             : null;
-
       }
     });
   }
+
 
   Future<void> _pickImage() async {
     final XFile? image = await showModalBottomSheet<XFile?>(
