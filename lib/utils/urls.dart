@@ -60,6 +60,10 @@ class Urls {
   static const String friendRequest = '/friend/request';
 
 
+  //family members
+
+  static  String getFamilyRequest (String type,limit,page) =>  '/friend/request?relation=$type&limit=$limit&page=$page';
+
   // requested
   static  String getRequest (String relation,limit,page) =>  '/friend/request?relation=$relation&limit=$limit&page=$page';
   static  String actionRequest (String id,status) =>  '/friend/action/$id?status=$status';

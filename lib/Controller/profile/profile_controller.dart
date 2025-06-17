@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../routes/app_routes.dart';
@@ -56,6 +57,7 @@ class ProfileController extends GetxController{
     String? updatedAgeRange,
     String? updatedUserMood,
     bool? fromSelectAge,
+    bool? moodCheckIn,
     File? imageFile,  // optional image file
   }) async {
     try {
@@ -96,9 +98,9 @@ class ProfileController extends GetxController{
         if (updatedName != null && updatedName.isNotEmpty) {
           fullName.value = updatedName;
         }
-        Get.snackbar('Success', response.body['message']);
+    moodCheckIn==true?Container():    Get.snackbar('Success', response.body['message']);
 
-        Get.offAllNamed(fromSelectAge==true?AppRoutes.signInScreen:AppRoutes.customNavBar);
+       moodCheckIn==true?Container(): Get.offAllNamed(fromSelectAge==true?AppRoutes.signInScreen:AppRoutes.customNavBar);
       } else {
         Get.snackbar('!!!', response.body['message'] ?? 'Failed to update profile');
       }

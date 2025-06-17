@@ -15,17 +15,12 @@ class RelationshipBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> relationships = [
-      'Mother',
-      'Father',
-      'Daughter',
-      'Son',
-      'Sister',
-      'Brother',
-      'Uncle',
-      'Aunty',
-      'Cousin',
-      'Grandmother',
-      'Grandfather'
+      "Mother", "Father", "Sister", "Brother", "Son", "Daughter",
+      "Grandmother", "Grandfather", "Grandson", "Granddaughter",
+      "Aunt", "Uncle", "Cousin", "Best friend", "Friend", "Nephew",
+      "Niece", "Mother in law", "Father in law", "Brother in law",
+      "Sister in law", "Stepmother", "Stepfather", "Stepbrother",
+      "Stepsister"
     ];
 
     return Container(

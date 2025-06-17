@@ -18,12 +18,81 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   ProfileController profileController =ProfileController();
-
+  List<Map<String, dynamic>> moodCategories = [];
+  int categoryIndex = 0;
+  String? selectedMood;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     profileController.fetchProfileData();
+
+    moodCategories = [
+      {
+        'category': '🌞 Happy',
+        'moods': [
+          '😄 Peaceful',
+          '🤩 Grateful',
+          '😊 Hopeful',
+          '💪 Inspired',
+          '🧘 Peaceful',
+          '💕 Loved',
+          '💯 Confident',
+          '⚡ Energized',
+          '💪 Proud',
+          '🚀 Motivated',
+          '😌 Relaxed',
+          '😄 Joyful',
+          '😆 Playful',
+        ]
+      },
+      {
+        'category': '🌥 Neutral / Mixed',
+        'moods': [
+          '😌 Calm',
+          '🤔 Reflective',
+          '🤷 Curious',
+          '😑 Bored',
+          '😐 Indifferent',
+          '🫤 Numb',
+          '🤷‍♀️ Uncertain',
+          '😴 Distracted',
+          '🏃‍♀️ Restless',
+        ]
+      },
+      {
+        'category': '🌧 Challenging',
+        'moods': [
+          '😢 Sad',
+          '😰 Anxious',
+          '😔 Lonely',
+          '😤 Overwhelmed',
+          '😠 Frustrated',
+          '😡 Angry',
+          '😞 Hurt',
+          '😓 Stressed',
+          '😩 Exhausted',
+          '😞 Disappointed',
+          '😒 Jealous',
+          '😕 Guilty',
+          '😨 Fearful',
+        ]
+      },
+      {
+        'category': '🌙 Deep / Complex',
+        'moods': [
+          '😌 Nostalgic',
+          '🥺 Sentimental',
+          '😔 Melancholy',
+          '😢 Vulnerable',
+          '😤 Empowered',
+          '💪 Resilient',
+          '🕵️‍♂️ Detached',
+          '😔 Inspired yet tired',
+        ]
+      }
+    ];
+
   }
   @override
   Widget build(BuildContext context) {
@@ -94,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: CustomTextButton(
                             text: "Check-In",
                             onTap: () {
-                              _showPopupMenu(context); // Pass context to the popup menu
+                              _showMoodCategorySelection();
                             },
                             fontSize: sizeH * 0.015,
                             padding: 0,
@@ -135,28 +204,121 @@ class _HomeScreenState extends State<HomeScreen> {
     final double top = offset.dy + size.height;
     final double left = offset.dx + size.width;
 
-    final List<String> moodOptions = ['😄 Peaceful', '🤩 Grateful', '😊 Hopeful', '😐 Lonely', '😢 Sad'];
+    final List<Map<String, String>> moodCategories = [
+      {
+        'title': '🌞 Happy',
+        'moods': '😄 Peaceful, 🤩 Grateful, 😊 Hopeful, 💪 Inspired, 🧘 Peaceful, 💕 Loved, 💯 Confident, ⚡ Energized, 💪 Proud, 🚀 Motivated, 😌 Relaxed, 😄 Joyful, 😆 Playful'
+      },
+      {
+        'title': '🌥 Neutral / Mixed',
+        'moods': '😌 Calm, 🤔 Reflective, 🤷 Curious, 😑 Bored, 😐 Indifferent, 🫤 Numb, 🤷‍♀️ Uncertain, 😴 Distracted, 🏃‍♀️ Restless'
+      },
+      {
+        'title': '🌧 Challenging',
+        'moods': '😢 Sad, 😰 Anxious, 😔 Lonely, 😤 Overwhelmed, 😠 Frustrated, 😡 Angry, 😞 Hurt, 😓 Stressed, 😩 Exhausted, 😞 Disappointed, 😒 Jealous, 😕 Guilty, 😨 Fearful'
+      },
+      {
+        'title': '🌙 Deep / Complex',
+        'moods': '😌 Nostalgic, 🥺 Sentimental, 😔 Melancholy, 😢 Vulnerable, 😤 Empowered, 💪 Resilient, 🕵️‍♂️ Detached, 😔 Inspired yet tired'
+      }
+    ];
 
     final selectedMood = await showMenu<String>(
       context: context,
       position: RelativeRect.fromLTRB(left, top, left + size.width, top),
-      items: moodOptions.map((mood) {
+      items: moodCategories.map((category) {
         return PopupMenuItem<String>(
-          value: mood,
-          child: Text(mood),
+          value: category['title']!,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(category['title']!),
+              SizedBox(height: 5),
+              Text(category['moods']!),
+            ],
+          ),
         );
       }).toList(),
       elevation: 8.0,
     );
 
     if (selectedMood != null) {
-      // Update mood through controller and then fetch updated data
-      await profileController.updateProfileData(updatedUserMood: selectedMood);
+      await profileController.updateProfileData(updatedUserMood: selectedMood, moodCheckIn: true);
       profileController.fetchProfileData();
+    }
+  }
+  // Show the mood category selection
+  void _showMoodCategorySelection() async {
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final offset = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
 
+    final double top = offset.dy + size.height;
+    final double left = offset.dx + size.width;
+
+    final selectedCategory = await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(left, top, left + size.width, top),
+      items: moodCategories.map((category) {
+        return PopupMenuItem<String>(
+          value: category['category'],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(category['category']),
+            ],
+          ),
+        );
+      }).toList(),
+      elevation: 8.0,
+    );
+
+    if (selectedCategory != null) {
+      setState(() {
+        this.selectedMood = selectedCategory;
+      });
+      _showMoodList(selectedCategory);
     }
   }
 
+  // Show mood options based on the selected category
+  void _showMoodList(String category) {
+    List<String> moods = [];
+    moodCategories.forEach((moodCategory) {
+      if (moodCategory['category'] == category) {
+        moods = List<String>.from(moodCategory['moods']);
+      }
+    });
+
+    // Display the moods to the user
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Select your mood"),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: moods.map((mood) {
+                return ListTile(
+                  title: Text(mood),
+                  onTap: () async {
+                    await profileController.updateProfileData(
+                      updatedUserMood: mood,
+                      moodCheckIn: true,
+                    );
+                    profileController.fetchProfileData();
+                    Navigator.pop(context);
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
 
   Widget customCard(double sizeH, String text, icon, Function onTap) {
     return InkWell(
@@ -190,4 +352,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
+

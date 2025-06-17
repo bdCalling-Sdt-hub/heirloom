@@ -32,7 +32,7 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
   List<String> selectedRecipients = [];
 
   bool get isEditing => widget.existingLegacy != null;
-  String? get editingLegacyId => widget.existingLegacy?['_id'];
+  String? get editingLegacyId => widget.existingLegacy?['userId'];
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
 
       if (legacy['recipients'] != null) {
         selectedRecipients = List<String>.from(
-          (legacy['recipients'] as List).map((r) => r['_id'].toString()),
+          (legacy['recipients'] as List).map((r) => r['userId'].toString()),
         );
         _recipientSearchController.text = (legacy['recipients'] as List)
             .map((r) => r['name'] ?? 'Unknown')
@@ -140,7 +140,7 @@ class _AddLegacyMessageScreenState extends State<AddLegacyMessageScreen> {
           itemCount: controller.friends.length,
           itemBuilder: (context, index) {
             final friend = controller.friends[index];
-            final friendId = friend['_id'].toString();
+            final friendId = friend['userId'].toString();
             final isSelected = selectedRecipients.contains(friendId);
 
             return Card(

@@ -29,34 +29,34 @@ class ProfileScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: sizeH * .015,
           children: [
-            // SizedBox(height: sizeH * .01),
-            // Profile picture
-
             // Show profile picture or a default image
 
-       Obx((){return    CircleAvatar(
-         radius: 45.r,  // half of 90
-         backgroundImage: profileController.profileImageUrl.value.isNotEmpty
-             ? CachedNetworkImageProvider(
-           ApiConstants.imageBaseUrl + profileController.profileImageUrl.value,
-         )
-             : AssetImage(AppImages.model) as ImageProvider,
-         backgroundColor: Colors.grey.shade200,
-       );}),
+            Obx(() {
+              return CircleAvatar(
+                radius: 45.r,
+                backgroundImage:
+                    profileController.profileImageUrl.value.isNotEmpty
+                        ? CachedNetworkImageProvider(
+                            ApiConstants.imageBaseUrl +
+                                profileController.profileImageUrl.value,
+                          )
+                        : AssetImage(AppImages.model) as ImageProvider,
+                backgroundColor: Colors.grey.shade200,
+              );
+            }),
+            Obx(() {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.w),
+                child: CustomTextOne(
+                  text: "@${profileController.userName.value}",
+                  maxLine: 1,
+                  textOverflow: TextOverflow.ellipsis,
+                  fontSize: 14.sp,
+                ),
+              );
+            }),
 
-          Obx((){
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.w),
-              child: CustomTextOne(
-                text: profileController.userName.value,
-                maxLine: 1,
-                textOverflow: TextOverflow.ellipsis,
-              ),
-            );
-          }),
-
-            Obx((){
-
+            Obx(() {
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25.w),
                 child: CustomTextTwo(
@@ -83,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
               icon: Image.asset(AppIcons.journal, height: 18.h),
               label: 'Journal',
               onTap: () {
-Get.toNamed(AppRoutes.journalScreen);
+                Get.toNamed(AppRoutes.journalScreen);
               },
             ),
             _buildProfileOption(
@@ -115,15 +115,11 @@ Get.toNamed(AppRoutes.journalScreen);
               },
             ),
 
-
-
-
             // Logout button
             _buildProfileOption(
               isTrue: true,
               icon: Image.asset(AppIcons.logOut, height: 18.h),
               label: 'Logout',
-
               fillColor: AppColors.cardColor,
               onTap: () {
                 showDialog(
@@ -147,7 +143,9 @@ Get.toNamed(AppRoutes.journalScreen);
                 );
               },
             ),
-            SizedBox(height: 20.h,)
+            SizedBox(
+              height: 20.h,
+            )
           ],
         ),
       ),
@@ -169,13 +167,13 @@ Get.toNamed(AppRoutes.journalScreen);
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-              color: fillColor ?? AppColors.profileCardColor,
-              border: Border.all(color: borderColor),
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-
+            color: fillColor ?? AppColors.profileCardColor,
+            border: Border.all(color: borderColor),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1), // Shadow color (with opacity)
+                color: Colors.black
+                    .withOpacity(0.1), // Shadow color (with opacity)
                 offset: Offset(0, 4), // Horizontal and vertical offset
                 blurRadius: 6, // Blur effect
                 spreadRadius: 0, // How much the shadow spreads
