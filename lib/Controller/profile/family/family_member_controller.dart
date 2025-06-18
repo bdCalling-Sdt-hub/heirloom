@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../services/api_client.dart';
 import '../../../utils/urls.dart';
@@ -9,6 +12,14 @@ class FamilyMemberController extends GetxController {
   var currentPage = 1.obs;
   var totalPages = 1.obs;
   final int limit = 10;
+  var friends = <Map<String, dynamic>>[].obs;
+  var selectedFriend = Rxn<Map<String, dynamic>>();
+  var selectedRelationship = "Relationship".obs;
+  var isUpdating = false.obs;
+  var selectedFriends = <Map<String, dynamic>>[].obs;
+  var selectedFriendIds = <String>[].obs;
+
+
 
   // Fetch requests (incoming or outgoing)
   Future<void> fetchFamilyRequests(String type) async {
@@ -39,24 +50,106 @@ class FamilyMemberController extends GetxController {
     }
   }
 
-// You can implement the update request status method as needed for approving/rejecting requests
-// Future<void> updateRequestStatus(String friendId, String status) async {
-//   try {
-//     final response = await ApiClient.postData(
-//         Urls.updateFamilyRequestStatus,
-//         {
-//           'friendId': friendId,
-//           'status': status
-//         }
-//     );
-//
-//     if (response.statusCode == 200) {
-//       Get.snackbar('Success', 'Request updated successfully');
-//     } else {
-//       Get.snackbar('Error', response.body['message']);
-//     }
-//   } catch (e) {
-//     Get.snackbar('Error', 'Failed to update request status: $e');
-//   }
-// }
+
+  var searchController = TextEditingController().obs;
+  Timer? _searchTimer;
+
+  @override
+  void onInit() {
+    super.onInit();
+   // fetchFriends();
+    // Listen to search text changes
+    searchController.value.addListener(_onSearchChanged);
+  }
+  @override
+  void onClose() {
+    _searchTimer?.cancel();
+    searchController.value.dispose();
+    super.onClose();
+  }
+
+  void _onSearchChanged() {
+    _searchTimer?.cancel();
+    _searchTimer = Timer(const Duration(milliseconds: 500), () {
+      fetchFriends(search: searchController.value.text);
+    });
+  }
+
+  Future<void> fetchFriends({String search = ''}) async {
+    try {
+      isLoading(true);
+      final url = search.isNotEmpty
+          ? Urls.searchRelationList(search)
+          : Urls.relationList;
+
+      final response = await ApiClient.getData(url);
+
+      if (response.statusCode == 200 && response.body['success'] == true) {
+        friends.value = List<Map<String, dynamic>>.from(response.body['data']['friend'] ?? []);
+      } else {
+        Get.snackbar('!!!', response.body['message'] ?? 'Failed to fetch friends');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to fetch friends: $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<void> updateRelationship() async {
+    if (selectedFriendIds.isEmpty) {
+      Get.snackbar('!!!', 'Please select at least one friend');
+      return;
+    }
+
+    if (selectedRelationship.value == "Relationship") {
+      Get.snackbar('!!!', 'Please select a relationship');
+      return;
+    }
+
+    try {
+      isUpdating(true);
+      final response = await ApiClient.postData(
+        Urls.updateRelationship,
+        {
+          'reciveBy': selectedFriendIds.join(','),
+          'relation': selectedRelationship.value,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Get.snackbar('Success', response.body['message'] );
+
+      } else {
+        Get.snackbar('!!!', response.body['message'] ?? 'Failed to update relationship');
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to update relationship: $e');
+    } finally {
+      isUpdating(false);
+      // Clear selections after update
+      selectedFriendIds.clear();
+      selectedRelationship.value = "Relationship";
+    }
+  }
+
+  void selectFriend(Map<String, dynamic> friend) {
+    selectedFriend.value = friend;
+  }
+
+  void setRelationship(String relationship) {
+    selectedRelationship.value = relationship;
+  }
+
+  void toggleFriendSelection(String friendId) {
+    if (selectedFriendIds.contains(friendId)) {
+      selectedFriendIds.remove(friendId);
+    } else {
+      selectedFriendIds.add(friendId);
+    }
+  }
+
+
+
+
 }

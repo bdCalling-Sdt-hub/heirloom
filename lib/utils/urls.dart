@@ -63,6 +63,9 @@ class Urls {
   //family members
 
   static  String getFamilyRequest (String type,limit,page) =>  '/friend/request?relation=$type&limit=$limit&page=$page';
+  static const String relationList = "/friend/list?relation=friend";
+  static  String searchRelationList (String search)=> "/friend/list?relation=friend&searchQ=$search";
+  static const String updateRelationship = "/friend/request";
 
   // requested
   static  String getRequest (String relation,limit,page) =>  '/friend/request?relation=$relation&limit=$limit&page=$page';

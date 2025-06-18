@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import '../../../Controller/profile/family/family_member_controller.dart';
 import '../../../global_widgets/dialog.dart';
 import '../../../global_widgets/relationship_bottomSheet.dart';
+
 class FamilyMembers extends StatefulWidget {
   const FamilyMembers({super.key});
 
@@ -22,7 +23,8 @@ class FamilyMembers extends StatefulWidget {
 
 class _FamilyMembersState extends State<FamilyMembers> {
   String selectedRelationship = "Brother";
-  final FamilyMemberController familyMemberController = Get.put(FamilyMemberController());
+  final FamilyMemberController familyMemberController =
+      Get.put(FamilyMemberController());
 
   @override
   void initState() {
@@ -53,128 +55,149 @@ class _FamilyMembersState extends State<FamilyMembers> {
             SizedBox(height: 15.h),
             CustomTextTwo(text: 'Review Family Members'),
             Obx(() {
+              if (familyMemberController.isLoading.value) {
+                return Center(child: CircularProgressIndicator());
+              }
+
               return familyMemberController.familyInRequests.isEmpty
                   ? SizedBox(
-                height: 50.h,
-                child: Center(child: CustomTextTwo(text: "No Request Found!")),
-              )
+                      height: 50.h,
+                      child: Center(
+                          child: CustomTextTwo(text: "No Request Found!")),
+                    )
                   : Flexible(
-                child: ListView.builder(
-                  itemCount: familyMemberController.familyInRequests.length,
-                  itemBuilder: (context, index) {
-                    final member = familyMemberController.familyInRequests[index];
-                    return buildFamilyMemberOption(
-                      name: member["name"] ?? "No Name",
-                      relation: member["relation"] ?? "No Relation",
-                      image: member["image"] ?? "",
-                      widthSize: 10.w,
-                      icon1: InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialog(
-                                title: "Are you sure you want to delete this Family Request?",
-                                subTitle: "This Request will be permanently deleted from your account.",
-                                confirmButtonText: "Delete",
-                                onCancel: () {
-                                  Get.back();
-                                },
-                                onConfirm: () {},
-                              );
-                            },
+                      child: ListView.builder(
+                        itemCount:
+                            familyMemberController.familyInRequests.length,
+                        itemBuilder: (context, index) {
+                          final member =
+                              familyMemberController.familyInRequests[index];
+                          return buildFamilyMemberOption(
+                            name: member["name"] ?? "No Name",
+                            relation: member["relation"] ?? "No Relation",
+                            image: member["image"] ?? "",
+                            widthSize: 10.w,
+                            icon1: InkWell(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomDialog(
+                                      title:
+                                          "Are you sure you want to delete this Family Request?",
+                                      subTitle:
+                                          "This Request will be permanently deleted from your account.",
+                                      confirmButtonText: "Delete",
+                                      onCancel: () {
+                                        Get.back();
+                                      },
+                                      onConfirm: () {},
+                                    );
+                                  },
+                                );
+                              },
+                              child: Image.asset(
+                                AppIcons.denied,
+                                height: 25.h,
+                              ),
+                            ),
+                            icon2: InkWell(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomDialog(
+                                      title:
+                                          "Are you certain you would like to add this individual as a member of your family?",
+                                      subTitle:
+                                          "This action will associate the individual with your family group. Please confirm your decision.",
+                                      confirmButtonText: "Confirm",
+                                      confirmButtonColor: Colors.green,
+                                      onCancel: () {
+                                        Get.back();
+                                      },
+                                      onConfirm: () {},
+                                    );
+                                  },
+                                );
+                              },
+                              child: Image.asset(
+                                AppIcons.approve,
+                                height: 25.h,
+                              ),
+                            ),
                           );
                         },
-                        child: Image.asset(
-                          AppIcons.denied,
-                          height: 25.h,
-                        ),
-                      ),
-                      icon2: InkWell(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialog(
-                                title: "Are you certain you would like to add this individual as a member of your family?",
-                                subTitle: "This action will associate the individual with your family group. Please confirm your decision.",
-                                confirmButtonText: "Confirm",
-                                confirmButtonColor: Colors.green,
-                                onCancel: () {
-                                  Get.back();
-                                },
-                                onConfirm: () {},
-                              );
-                            },
-                          );
-                        },
-                        child: Image.asset(
-                          AppIcons.approve,
-                          height: 25.h,
-                        ),
                       ),
                     );
-                  },
-                ),
-              );
             }),
             CustomTextTwo(text: 'Family Members You Added'),
             Obx(() {
+              if (familyMemberController.isLoading.value) {
+                return Center(child: CircularProgressIndicator());
+              }
               return familyMemberController.familyOutRequests.isEmpty
                   ? SizedBox(
-                height: 50.h,
-                child: Center(child: CustomTextTwo(text: "No Request Found!")),
-              )
+                      height: 50.h,
+                      child: Center(
+                          child: CustomTextTwo(text: "No Request Found!")),
+                    )
                   : Flexible(
-                child: ListView.builder(
-                  itemCount: familyMemberController.familyOutRequests.length,
-                  itemBuilder: (context, index) {
-                    final member = familyMemberController.familyOutRequests[index];
-                    return buildFamilyMemberOption(
-                      name: member["name"] ?? "No Name",
-                      relation: "${member["relation"] ?? "No Relation"} (${member["status"] ?? "No Status"})",
-                      image: member["image"] ?? "",
-                      icon1: IconButton(
-                        icon: Icon(
-                          FontAwesomeIcons.penToSquare,
-                          color: Colors.white,
-                          size: 16.h,
-                        ),
-                        onPressed: () {
-                          Get.bottomSheet(
-                            RelationshipBottomSheet(
-                              onSelectRelationship: (relationship) {
-                                setState(() {
-                                  selectedRelationship = relationship;
-                                });
+                      child: ListView.builder(
+                        itemCount:
+                            familyMemberController.familyOutRequests.length,
+                        itemBuilder: (context, index) {
+                          final member =
+                              familyMemberController.familyOutRequests[index];
+                          return buildFamilyMemberOption(
+                            name: member["name"] ?? "No Name",
+                            relation:
+                                "${member["relation"] ?? "No Relation"} (${member["status"] ?? "No Status"})",
+                            image: member["image"] ?? "",
+                            icon1: IconButton(
+                              icon: Icon(
+                                FontAwesomeIcons.penToSquare,
+                                color: Colors.white,
+                                size: 16.h,
+                              ),
+                              onPressed: () {
+                                Get.bottomSheet(
+                                  RelationshipBottomSheet(
+                                    onSelectRelationship: (relationship) {
+                                      setState(() {
+                                        selectedRelationship = relationship;
+                                      });
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                            icon2: IconButton(
+                              icon: Icon(Icons.delete_outline,
+                                  color: Colors.red, size: 20.h),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomDialog(
+                                      title:
+                                          "Are you sure you want to delete this Family Member?",
+                                      subTitle:
+                                          "It will be permanently deleted from your account.",
+                                      confirmButtonText: "Delete",
+                                      onCancel: () {
+                                        Get.back();
+                                      },
+                                      onConfirm: () async {},
+                                    );
+                                  },
+                                );
                               },
                             ),
                           );
                         },
                       ),
-                      icon2: IconButton(
-                        icon: Icon(Icons.delete_outline, color: Colors.red, size: 20.h),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialog(
-                                title: "Are you sure you want to delete this Family Member?",
-                                subTitle: "It will be permanently deleted from your account.",
-                                confirmButtonText: "Delete",
-                                onCancel: () {
-                                  Get.back();
-                                },
-                                onConfirm: () async {},
-                              );
-                            },
-                          );
-                        },
-                      ),
                     );
-                  },
-                ),
-              );
             }),
           ],
         ),
@@ -213,7 +236,8 @@ class _FamilyMembersState extends State<FamilyMembers> {
               CircleAvatar(
                 radius: 20.r,
                 backgroundColor: AppColors.primaryColor,
-                backgroundImage: NetworkImage(ApiConstants.imageBaseUrl + image ?? AppImages.model),
+                backgroundImage: NetworkImage(
+                    ApiConstants.imageBaseUrl + image ?? AppImages.model),
               ),
               SizedBox(width: 15.w),
               Column(
@@ -236,4 +260,3 @@ class _FamilyMembersState extends State<FamilyMembers> {
         ));
   }
 }
-
